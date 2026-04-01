@@ -1,3 +1,10 @@
 <Solution>
-  <Project Path="ClercSystem/ClercSystem.csproj" />
+  <Folder Name="/Data/">
+    <Project Path="ClercSystem.Data/ClercSystem.Data.csproj" Id="b3767fef-d0d4-45b1-80cc-86620a4fb25d" />
+    <Project Path="ClercSystem.Models/ClercSystem.Data.Models.csproj" Id="2285670d-5041-4da2-9c9d-d00d8dd47265" />
+  </Folder>
+  <Folder Name="/Web/">
+    <Project Path="ClercSystem/ClercSystem.csproj" />
+    <Project Path="ClercSystsem.ViewModels/ClercSystem.ViewModels.csproj" Id="87d012d0-a902-4fb2-a530-42cb2697160e" />
+  </Folder>
 </Solution>
