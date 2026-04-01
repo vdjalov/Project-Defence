@@ -18,6 +18,7 @@ namespace ClercSystem.Data.Models
         [Required]
         public DateTime CreatedOn { get; set; } = DateTime.Now;
         public int TimeToAnswer { get; set; } = DateTime.Now.AddDays(5).Day;
+        public bool HasBeenAnswered { get; set; } = false;
         public Guid DepartmentId  { get; set; }
         public Department Department { get; set; } = null!;
         public ApplicationUser CreatedBy { get; set; } = null!;
