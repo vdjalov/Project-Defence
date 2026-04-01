@@ -15,9 +15,10 @@ namespace ClercSystem.Data.Models
         [MaxLength(TitleMaxLength)]
         public string Title { get; set; } = null!;
         public string ?FilePath { get; set; }
+
         [Required]
         public DateTime CreatedOn { get; set; } = DateTime.Now;
-        public int TimeToAnswer { get; set; } = DateTime.Now.AddDays(5).Day;
+        public int TimeToAnswer { get; set; } = DateTime.Now.AddDays(TimeToAnswerInDays).Day;
         public bool HasBeenAnswered { get; set; } = false;
         public Guid DepartmentId  { get; set; }
         public Department Department { get; set; } = null!;

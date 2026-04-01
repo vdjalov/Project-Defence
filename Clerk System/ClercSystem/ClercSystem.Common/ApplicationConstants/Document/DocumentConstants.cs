@@ -8,6 +8,6 @@ namespace ClercSystem.Common.ApplicationConstants.Document
     {
         public const int TitleMinLength = 3;
         public const int TitleMaxLength = 100;
-
+        public const int TimeToAnswerInDays = 5;
     }
 }
