@@ -17,7 +17,7 @@ namespace ClercSystem.Data.Models
             public int VersionNumber { get; set; }
 
             public DateTime CreatedAt { get; set; }
-
+        
             public Guid CreatedById { get; set; }
 
             [ForeignKey(nameof(CreatedById))]
