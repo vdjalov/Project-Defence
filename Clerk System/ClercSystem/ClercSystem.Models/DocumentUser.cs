@@ -13,15 +13,12 @@ namespace ClercSystem.Data.Models
         [Required]
         public Guid DocumentId { get; set; }
 
-        [ForeignKey(nameof(Document))]
         public Document Document { get; set; } = null!;
 
         public Guid UserId { get; set; }
 
-        [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; } = null!;
 
-        [Required]
         public PermissionType Permission { get; set; }
     }
 }

@@ -15,6 +15,11 @@ namespace ClercSystem.Data
 
         public AppDbContext(DbContextOptions options) : base(options){}
 
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Category> Departments { get; set; }
+        public DbSet<Category> Documents { get; set; }
+        public DbSet<Category> DocumentLogs { get; set; }
+        public DbSet<Category> DocumentsUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
