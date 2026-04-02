@@ -20,5 +20,8 @@ namespace ClercSystem.Data.Models
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; } = null!;
+
+        [Required]
+        public PermissionType Permission { get; set; }
     }
 }

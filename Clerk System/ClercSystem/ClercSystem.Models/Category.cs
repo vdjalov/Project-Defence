@@ -12,8 +12,12 @@ namespace ClercSystem.Data.Models
         [Required]
         [MinLength(NameMinLength)]
         [MaxLength(NameMaxLength)]
-        public string Name { get; set; } = null!;
+        public string CategoryName { get; set; } = null!;
 
+        [Required]
+        [MinLength(DescriptionMinLength)]
+        [MaxLength(DescriptionMaxLength)]
+        public string Description { get; set; } = null!;
         public ICollection<Document> Documents { get; set; } = new List<Document>();
     }
 }

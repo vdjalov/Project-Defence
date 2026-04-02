@@ -15,6 +15,8 @@ namespace ClercSystem.Data.Models
         [MaxLength(NameMaxLength)]
         public string Name { get; set; } = null!;
 
+        public ICollection<ApplicationUser> Users = new HashSet<ApplicationUser>();
+
         public ICollection<Document> Documents { get; set; } = new HashSet<Document>();
 
     }
