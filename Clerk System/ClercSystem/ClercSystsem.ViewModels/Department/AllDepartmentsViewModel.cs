@@ -5,5 +5,6 @@
         public Guid DepartmentId { get; set; }
 
         public string Name { get; set; } = null!;
+        public string Location { get; set; } = null!;
     }
 }

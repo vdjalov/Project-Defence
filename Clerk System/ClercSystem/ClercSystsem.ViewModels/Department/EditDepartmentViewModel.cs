@@ -2,18 +2,12 @@
 
 using System.ComponentModel.DataAnnotations;
 
-
-namespace ClercSystem.Data.Models
+namespace ClercSystem.ViewModels.Department
 {
-    public class Department
+    public class EditDepartmentViewModel
     {
-        [Key]
-        public Guid DepartmentId { get; set; }
 
-        public Department()
-        {
-            this.DepartmentId = Guid.NewGuid();
-        }
+        public Guid DepartmentId { get; set; }
 
         [Required]
         [MinLength(NameMinLength)]
@@ -24,10 +18,5 @@ namespace ClercSystem.Data.Models
         [MinLength(LocationMinLength)]
         [MaxLength(LocationMaxLength)]
         public string Location { get; set; } = null!;
-
-        public ICollection<ApplicationUser> Users = new HashSet<ApplicationUser>();
-
-        public ICollection<Document> Documents { get; set; } = new HashSet<Document>();
-
     }
 }

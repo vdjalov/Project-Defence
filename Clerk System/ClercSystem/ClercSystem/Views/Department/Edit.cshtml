@@ -1,9 +1,14 @@
-﻿@using ClercSystem.ViewModels.Department;
-@model CreateDepartmentViewModel;
+﻿
+@using ClercSystem.ViewModels.Department
+@model EditDepartmentViewModel;
 
-<h2>Add a New Department</h2>
+<h2>Edit Cinema</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken() <!-- Adds anti-forgery token for CSRF protection -->
+    <!-- Hidden field for Department ID -->
+    <input type="hidden" asp-for="DepartmentId" />
+
     <div class="form-group">
         <label asp-for="Name" class="control-label"></label>
         <input asp-for="Name" class="form-control" />
@@ -17,8 +22,8 @@
     </div>
 
     <div class="form-group mt-3">
-        <button type="submit" class="btn btn-primary">Add Department</button>
-        <a asp-action="Index" class="btn btn-secondary ml-2">Back to List Of Departments</a>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-action="Index" class="btn btn-secondary ml-2">Cancel</a>
     </div>
 </form>
 

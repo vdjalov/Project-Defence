@@ -13,6 +13,8 @@ namespace ClercSystem.ViewModels.Department
         public string Name { get; set; } = null!;
 
         [Required]
+        [MinLength(LocationMinLength)]
+        [MaxLength(LocationMaxLength)]
         public string Location { get; set; } = null!;
 
     }
