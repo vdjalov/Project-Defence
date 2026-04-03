@@ -17,9 +17,7 @@ namespace ClercSystem
                 options.UseSqlServer(connectionString);
             });
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AppDbContext>();
-
-         
+                      
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {
                 //SignIn settings
@@ -43,7 +41,10 @@ namespace ClercSystem
 
             })
                 .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
+
+            builder.Services.AddRazorPages();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -59,10 +60,15 @@ namespace ClercSystem
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapRazorPages();
+            app.MapControllers();
 
             app.MapStaticAssets();
             app.MapControllerRoute(
