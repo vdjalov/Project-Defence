@@ -14,6 +14,7 @@ namespace ClercSystem.Controllers
             this.context = _context;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             List<AllDepartmentsViewModel> allDepartments = 
@@ -26,5 +27,11 @@ namespace ClercSystem.Controllers
 
             return View(allDepartments); ;
         }
+
+    //    [HttpGet]
+    //    public async Task<IActionResult> Create()
+    //    {
+
+    //    }
     }
 }
