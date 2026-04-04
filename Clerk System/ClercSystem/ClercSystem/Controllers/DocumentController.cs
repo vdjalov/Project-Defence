@@ -5,12 +5,10 @@ using ClercSystem.ViewModels.Department;
 using ClercSystem.ViewModels.Document;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ClercSystem.Controllers
 {
-    public class DocumentController : Controller
+    public class DocumentController : BaseController
     {
         private readonly AppDbContext context;
 
@@ -68,7 +66,7 @@ namespace ClercSystem.Controllers
                 return View(model);
             }
 
-            Guid userId = Guid.Parse(GetUserId());
+            Guid userId = Guid.Parse(base.GetUserId());
 
             DateTime date;
             bool success = DateTime.TryParse(model.CreatedOn, out date);
@@ -97,15 +95,18 @@ namespace ClercSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SoftDelete(Guid id)
+        {
+
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
      
 
-        private string GetUserId()
-        {
+        
 
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        }
-
-}
+    }
 }

@@ -49,9 +49,14 @@ namespace ClercSystem.Data.Models
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; } = null!;
 
+        bool IsDeleted { get; set; } = false;
+
         // navigational property for document user
         public ICollection<DocumentUser> DocumentsUsers { get; set; } = new List<DocumentUser>();
         public ICollection<DocumentLog> DocumentsLogs { get; set; } = new List<DocumentLog>();
     }
+
+
+
         
 }
