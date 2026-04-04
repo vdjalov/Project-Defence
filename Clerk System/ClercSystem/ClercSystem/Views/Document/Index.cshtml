@@ -3,12 +3,12 @@
 
 @* @if (User?.Identity?.IsAuthenticated ?? false) // show only if user is logged in
 { *@
-     <h2>Departments</h2> 
+     <h2>Documents</h2> 
     @* @if (!string.IsNullOrEmpty(ViewBag.userId) && ViewBag.isUserManager)
     { *@
         <div class="d-flex justify-content-end mb-4">
             <a asp-action="Create" class="btn btn-primary btn-lg">
-                <i class="bi bi-plus-circle"></i> Add New Department
+                <i class="bi bi-plus-circle"></i> Add New Document
             </a>
         </div>
 @*     }
@@ -18,8 +18,10 @@
     <thead class="table-dark">
         <tr>
             <th scope="col">Name</th>
-            <th scope="col">Location</th>
-            @*  <th scope="col" class="text-center">Program</th> *@
+            <th scope="col">Creator</th>
+            <th scope="col">Category</th>
+            <th scope="col">Department</th>
+            <th scope="col" class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>

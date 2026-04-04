@@ -1,25 +1,71 @@
-﻿@using ClercSystem.ViewModels.Department;
-@model CreateDepartmentViewModel;
+﻿@using ClercSystem.ViewModels.Document;
+@model CreateDocumentViewModel;
 
-<h2>Add a New Department</h2>
+<h2>Add a New Document</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Location" class="control-label"></label>
-        <input asp-for="Location" class="form-control" />
-        <span asp-validation-for="Location" class="text-danger"></span>
+        <label asp-for="FilePath" class="control-label"></label>
+        <input asp-for="FilePath" class="form-control" />
+        <span asp-validation-for="FilePath" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CreatedOn" class="control-label"></label>
+        <input asp-for="CreatedOn" class="form-control"  type="datetime"/>
+        <span asp-validation-for="CreatedOn" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TimeToAnswer" class="control-label"></label>
+        <input asp-for="TimeToAnswer" class="form-control" type="datetime" />
+        <span asp-validation-for="TimeToAnswer" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"> </textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+       <label asp-for="DepartmentId" class="control-label"></label>
+       <select asp-for="DepartmentId" class="form-select">
+            @foreach (var department in Model.Departments)
+            {
+                <option value="@department.DepartmentId">@department.Name</option>
+                
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CategoryId" class="control-label"></label>
+        <select asp-for="CategoryId" class="form-select">
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id">@category.CategoryName</option>
+            }
+        </select>
     </div>
 
     <div class="form-group mt-3">
-        <button type="submit" class="btn btn-primary">Add Department</button>
+        <button type="submit" class="btn btn-primary">Add Document</button>
         <a asp-action="Index" class="btn btn-secondary ml-2">Back to List Of Departments</a>
     </div>
+
+
 </form>
 
 @section Scripts {
