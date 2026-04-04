@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClercSystem.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260403124631_initial")]
+    [Migration("20260404072451_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -117,6 +117,11 @@ namespace ClercSystem.Data.Migrations
                     b.Property<Guid>("DepartmentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()

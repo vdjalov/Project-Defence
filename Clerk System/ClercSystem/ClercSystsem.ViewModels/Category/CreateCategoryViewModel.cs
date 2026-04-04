@@ -1,19 +1,13 @@
-﻿using static ClercSystem.Common.ApplicationConstants.Category.CategoryConstants;
+﻿
+using static ClercSystem.Common.ApplicationConstants.Category.CategoryConstants;
 
 using System.ComponentModel.DataAnnotations;
 
-namespace ClercSystem.Data.Models
+
+namespace ClercSystem.ViewModels.Category
 {
-    public class Category
+    public class CreateCategoryViewModel
     {
-        [Key]
-        public Guid Id { get; set; }
-
-        public Category()
-        {
-            this.Id = Guid.NewGuid();
-        }
-
         [Required]
         [MinLength(NameMinLength)]
         [MaxLength(NameMaxLength)]
@@ -23,6 +17,5 @@ namespace ClercSystem.Data.Models
         [MinLength(DescriptionMinLength)]
         [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; } = null!;
-        public ICollection<Document> Documents { get; set; } = new List<Document>();
     }
 }

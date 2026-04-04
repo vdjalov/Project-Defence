@@ -63,7 +63,7 @@ namespace ClercSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            Data.Models.Department? department = await this.context.Departments.FindAsync(id);
+            Department? department = await this.context.Departments.FindAsync(id);
 
             if (department == null)
             {
@@ -88,7 +88,7 @@ namespace ClercSystem.Controllers
                 return View(model);
             }
 
-            Data.Models.Department? department = await this.context.Departments.FindAsync(model.DepartmentId);
+            Department? department = await this.context.Departments.FindAsync(model.DepartmentId);
 
             if (department == null)
             {
@@ -107,7 +107,7 @@ namespace ClercSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
-            Department department = await this.context.Departments.FindAsync(id);
+            Department? department = await this.context.Departments.FindAsync(id);
 
             if (department == null)
             {
