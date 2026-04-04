@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoryController : BaseController
     {
         private readonly AppDbContext context;
 

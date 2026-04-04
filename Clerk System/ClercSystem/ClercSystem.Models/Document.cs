@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+
 using static ClercSystem.Common.ApplicationConstants.Document.DocumentConstants;
-using static ClercSystem.Data.Models.DocumentLog;
 
 
 namespace ClercSystem.Data.Models
@@ -49,7 +50,7 @@ namespace ClercSystem.Data.Models
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; } = null!;
 
-        bool IsDeleted { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
 
         // navigational property for document user
         public ICollection<DocumentUser> DocumentsUsers { get; set; } = new List<DocumentUser>();

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Controllers
 {
-    public class DepartmentController : Controller
+    public class DepartmentController : BaseController
     {
         private readonly AppDbContext context;
 

@@ -21,9 +21,10 @@ namespace ClercSystem.Controllers
         public async Task<IActionResult> Index()
         {
             List<AllDocumentsViewModel> documents = await this.context.Documents
-                .Include(d => d.Department)
-                .Include(d => d.CreatedBy)
-                .Include(d => d.Category)
+                //.Include(d => d.Department)
+                //.Include(d => d.CreatedBy)
+                //.Include(d => d.Category)
+                .Where(d => !d.IsDeleted)
                 .Select(d => new AllDocumentsViewModel
                 {
                     Id = d.Id,
@@ -95,12 +96,44 @@ namespace ClercSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
+
+
+
+
+
+
+
+
+        [HttpGet] // soft deleting a document so that it does not get lost permanently and can be restored if needed
         public async Task<IActionResult> SoftDelete(Guid id)
         {
+            Document? document = await this.context.Documents.FindAsync(id);
 
+            if(document == null)
+            {
+                TempData["ErrorMessage"] = "Oops something went awire.";
+                return RedirectToAction(nameof(Index));
+            }
 
-            return RedirectToAction(nameof(Index));
+            bool isGuidValid = base.CheckIfGuidIsValid(id);
+            
+            if (!isGuidValid)
+            {
+                TempData["ErrorMessage"] = "Invalid Id";
+                return RedirectToAction(nameof(Index));
+            }
+
+           if(document.CreatedById != base.GetUserIdAsGuid())
+            {
+                TempData["ErrorMessage"] = "You do not have sufficient rights to work on this document";
+                return RedirectToAction(nameof(Index));
+            }
+
+           document.IsDeleted = true;
+           this.context.Update(document);
+           await this.context.SaveChangesAsync();
+
+           return RedirectToAction(nameof(Index));
         }
 
 
