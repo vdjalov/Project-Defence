@@ -25,6 +25,11 @@ namespace ClercSystem.Data.Models
 
         public bool HasBeenAnswered { get; set; } = false;
 
+        [Required]
+        [MinLength(DescriptionMinLength)]
+        [MaxLength(DescriptionMaxLength)]
+        public string Description { get; set; } = null!;
+
         public Guid DepartmentId { get; set; }
 
         [ForeignKey(nameof(DepartmentId))]
