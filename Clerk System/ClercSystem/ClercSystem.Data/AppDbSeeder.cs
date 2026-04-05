@@ -15,10 +15,10 @@ namespace ClercSystem.Data
             if (!context.Departments.Any())
             {
                 context.Departments.AddRange(
-                    new Department { DepartmentId = Guid.NewGuid(), Name = "Human Resources" },
-                    new Department { DepartmentId = Guid.NewGuid(), Name = "IT" },
-                    new Department { DepartmentId = Guid.NewGuid(), Name = "Finance" },
-                    new Department { DepartmentId = Guid.NewGuid(), Name = "Accounting" }
+                    new Department {  Name = "Human Resources" },
+                    new Department {  Name = "IT" },
+                    new Department {  Name = "Finance" },
+                    new Department {  Name = "Accounting" }
                         
                 );
 
