@@ -14,12 +14,11 @@ namespace ClercSystem.Data.Models
 
         public bool IsManager { get; set; } = false;
 
-        public Guid DepartmentId { get; set; }
+        public Guid? DepartmentId { get; set; }
 
-        // shows whitch department the employee belongs to 
-        [Required]
+        // shows whitch department the employee belongs to not initialy input after registration the superadmin decides
         [ForeignKey(nameof(DepartmentId))]
-        public Department Department { get; set; } = null!;
+        public Department Department { get; set; }
 
         // Navigation properties for the user documents 
         public ICollection<DocumentUser> DocumentsUsers { get; set; } = new HashSet<DocumentUser>();
