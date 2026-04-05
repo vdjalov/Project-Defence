@@ -1,0 +1,14 @@
+﻿@using ClercSystem.ViewModels.Category;
+@model CategoryMoreViewModel;
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>DETAILS</h2>
+
+<p><strong>Title:</strong> @Model.CategoryName</p>
+<p><strong>File Path:</strong> @Model.Description</p>
+
+
+<a asp-action="Index" class="btn btn-primary">Back to All Categories</a>

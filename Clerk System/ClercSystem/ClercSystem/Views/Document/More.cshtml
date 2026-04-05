@@ -1,0 +1,19 @@
+﻿@using ClercSystem.ViewModels.Document;
+@model DocumentMoreViewModel;
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>@Model.Title</h2>
+
+<p><strong>Title:</strong> @Model.Title</p>
+<p><strong>File Path:</strong> @Model.FilePath</p>
+<p><strong>Creation Date:</strong> @Model.CreatedOn.ToString("dd/MM/yyyy")</p>
+<p><strong>Deadline:</strong> @Model.TimeToAnswer</p>
+<p><strong>Has Been Answered:</strong> @(Model.HasBeenAnswered ? "Yes" : "No") </p>
+<p><strong>Department Name:</strong> @Model.DepartmentName</p>
+<p><strong>Creator:</strong> @Model.CreatedBy</p>
+<p><strong>Category Name:</strong> @Model.CategoryName</p>
+
+<a asp-action="Index" class="btn btn-primary">Back to All Documents</a>

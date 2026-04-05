@@ -122,20 +122,20 @@ namespace ClercSystem.Controllers
             Document? document = await this.context.Documents.FindAsync(id);
 
 
-            // only the creator of the document can edit it ?????
-            //if (document.CreatedById != base.GetUserIdAsGuid()) 
-            //{
-            //    TempData["ErrorMessage"] = "You do not have sufficient rights to work on this document";
-            //    return RedirectToAction(nameof(Index));
-            //}
+            //only the creator of the document can edit it ?????
+            if (document.CreatedById != base.GetUserIdAsGuid())
+            {
+                TempData["ErrorMessage"] = "You do not have sufficient rights to work on this document";
+                return RedirectToAction(nameof(Index));
+            }
 
-           EditDocumentViewModel editDocumentViewModel = new EditDocumentViewModel
+            EditDocumentViewModel editDocumentViewModel = new EditDocumentViewModel
            {
                Title = document.Title,
                FilePath = document.FilePath,
-               CreatedOn = document.CreatedOn.ToString(),
                TimeToAnswer = document.TimeToAnswer,
                Description = document.Description,
+               HasBeenAnswered = document.HasBeenAnswered,
                DepartmentId = document.DepartmentId.ToString(),
                CategoryId = document.CategoryId.ToString(),
                Departments = await this.context.Departments
@@ -177,26 +177,54 @@ namespace ClercSystem.Controllers
                 TempData["ErrorMessage"] = "You do not have sufficient rights to work on this document";
                 return RedirectToAction(nameof(Index));
             }
-            DateTime date;
-            bool success = DateTime.TryParse(model.CreatedOn, out date);
-            if (!success)
-            {
-                throw new ArgumentException("Invalid date format for CreatedOn");
-            }
+          
             document.Title = model.Title;
             document.FilePath = model.FilePath;
-            document.CreatedOn = date;
             document.TimeToAnswer = model.TimeToAnswer;
             document.Description = model.Description;
             document.DepartmentId = Guid.Parse(model.DepartmentId);
             document.CategoryId = Guid.Parse(model.CategoryId);
+            document.HasBeenAnswered = model.HasBeenAnswered;
             this.context.Update(document);
             await this.context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> More(Guid id) // view more details about a document
+        {
+            Document? document = await this.context.Documents
+                .Include(d => d.Department)
+                .Include(d => d.CreatedBy)
+                .Include(d => d.Category)
+                .FirstOrDefaultAsync(d => d.Id == id);
 
+            if(document == null)
+            {
+                TempData["ErrorMessage"] = "Oops something went awire.";
+                return RedirectToAction(nameof(Index));
+            }
+            bool isGuidValid = base.CheckIfGuidIsValid(id);
+            if (!isGuidValid)
+            {
+                TempData["ErrorMessage"] = "Invalid Id";
+                return RedirectToAction(nameof(Index));
+            }
+            DocumentMoreViewModel documentMoreViewModel = new DocumentMoreViewModel
+            {
+                Title = document.Title,
+                FilePath = document.FilePath,
+                CreatedOn = document.CreatedOn,
+                TimeToAnswer = document.TimeToAnswer,
+                HasBeenAnswered = document.HasBeenAnswered,
+                Description = document.Description,
+                DepartmentName = document.Department.Name,
+                CreatedBy = document.CreatedBy.UserName,
+                CategoryName = document.Category.CategoryName,
+            };
+            return View(documentMoreViewModel);
+        }
 
 
 

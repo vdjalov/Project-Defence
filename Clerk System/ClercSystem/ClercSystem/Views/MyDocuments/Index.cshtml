@@ -1,6 +1,5 @@
-﻿@using ClercSystem.ViewModels.Document;
-@model IEnumerable<AllDocumentsViewModel>;
-
+﻿@using ClercSystem.ViewModels.MyDocuments;
+@model IEnumerable<MyDocumentsViewModel>;
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">
@@ -10,12 +9,11 @@
 
 @* @if (User?.Identity?.IsAuthenticated ?? false) // show only if user is logged in
 { *@
-
-     <h2>Documents</h2> 
+     <h2>My Documents</h2> 
     @* @if (!string.IsNullOrEmpty(ViewBag.userId) && ViewBag.isUserManager)
     { *@
         <div class="d-flex justify-content-end mb-4">
-            <a asp-action="Create" class="btn btn-primary btn-lg">
+            <a asp-controller="Document" asp-action="Create" class="btn btn-primary btn-lg">
                 <i class="bi bi-plus-circle"></i> Add New Document
             </a>
         </div>
@@ -33,7 +31,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (AllDocumentsViewModel doc in Model)
+        @foreach (MyDocumentsViewModel doc in Model)
         {
             <tr>
                 <td>@doc.Title</td>
@@ -41,13 +39,13 @@
                 <td>@doc.CategoryName</td>
                 <td>@doc.DepartmentName</td>
                 <td class="text-center">
-                    <a asp-action="More" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
+                    <a asp-controller="Document"  asp-action="More" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
                         <i class="bi bi-calendar-plus"></i> More
                     </a>
-                    <a asp-action="Edit" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
+                    <a asp-controller="Document" asp-action="Edit" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
                         <i class="bi bi-calendar-plus"></i> Edit
                     </a>
-                    <a asp-action="SoftDelete" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
+                    <a asp-controller="Document" asp-action="SoftDelete" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
                         <i class="bi bi-calendar-plus"></i> Delete
                     </a>
                 </td>

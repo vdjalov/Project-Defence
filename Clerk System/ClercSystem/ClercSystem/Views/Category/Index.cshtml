@@ -1,6 +1,14 @@
 ﻿@using ClercSystem.ViewModels.Category;
 @model IEnumerable<AllCategoriesViewModel>;
 
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 @* @if (User?.Identity?.IsAuthenticated ?? false) // show only if user is logged in
 { *@
      <h2>Categories</h2> 
@@ -18,7 +26,7 @@
     <thead class="table-dark">
         <tr>
             <th scope="col">Name</th>
-            @* <th scope="col">Location</th> *@
+            <th scope="col">Actions</th>
             @*  <th scope="col" class="text-center">Program</th> *@
         </tr>
     </thead>

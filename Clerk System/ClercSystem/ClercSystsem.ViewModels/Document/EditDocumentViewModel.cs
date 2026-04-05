@@ -16,9 +16,6 @@ namespace ClercSystem.ViewModels.Document
         public string? FilePath { get; set; }
 
         [Required]
-        public string CreatedOn { get; set; } = null!;
-
-        [Required]
         public string TimeToAnswer { get; set; } = null!;
 
 
@@ -30,6 +27,9 @@ namespace ClercSystem.ViewModels.Document
         public string DepartmentId { get; set; } = null!;
 
         public string CategoryId { get; set; } = null!;
+
+        [Required]
+        public bool HasBeenAnswered { get; set; } = false;
 
         public List<AllDepartmentsViewModel> Departments { get; set; } = new List<AllDepartmentsViewModel>();
 
