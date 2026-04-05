@@ -3,11 +3,13 @@ using ClercSystem.Data.Models;
 using ClercSystem.ViewModels.Category;
 using ClercSystem.ViewModels.Department;
 using ClercSystem.ViewModels.Document;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Controllers
 {
+    [Authorize]
     public class DocumentController : BaseController
     {
         private readonly AppDbContext context;

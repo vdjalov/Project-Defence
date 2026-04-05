@@ -106,7 +106,7 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("ClercSystem.Data.Models.Department", b =>
@@ -127,7 +127,7 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasKey("DepartmentId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("ClercSystem.Data.Models.Document", b =>
@@ -179,7 +179,7 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Documents");
+                    b.ToTable("Documents", (string)null);
                 });
 
             modelBuilder.Entity("ClercSystem.Data.Models.DocumentLog", b =>
@@ -208,7 +208,7 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasIndex("DocumentId");
 
-                    b.ToTable("DocumentLogs");
+                    b.ToTable("DocumentLogs", (string)null);
                 });
 
             modelBuilder.Entity("ClercSystem.Data.Models.DocumentUser", b =>
@@ -226,7 +226,7 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DocumentsUsers");
+                    b.ToTable("DocumentsUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>

@@ -1,11 +1,14 @@
 ﻿using ClercSystem.Data;
 using ClercSystem.Data.Models;
 using ClercSystem.ViewModels.Category;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Controllers
 {
+
+    [Authorize]
     public class CategoryController : BaseController
     {
         private readonly AppDbContext context;

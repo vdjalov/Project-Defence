@@ -1,10 +1,12 @@
 ﻿using ClercSystem.Data;
 using ClercSystem.ViewModels.MyDocuments;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Controllers
 {
+    [Authorize]
     public class MyDocumentsController : BaseController
     {
         private readonly AppDbContext context;
