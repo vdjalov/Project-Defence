@@ -1,6 +1,11 @@
 ﻿@using ClercSystem.ViewModels.Document;
 @model IEnumerable<AllDocumentsViewModel>;
 
+@{
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+}
+
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">
@@ -67,3 +72,77 @@
         }
     </tbody>
 </table>
+
+@* PAGINATION BOOTSRAP *@
+<nav aria-label="Documents pagination">
+    <ul class="pagination pagination-lg justify-content-center">
+
+        <!-- Previous -->
+        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+            <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(currentPage - 1)"
+                   asp-route-search="@ViewBag.Search">
+                <i class="bi bi-chevron-left">previous</i>
+            </a>
+        </li>
+
+        <!-- First page (optional) -->
+        @if (currentPage > 2)
+        {
+            <li class="page-item">
+                <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="1"
+                       asp-route-search="@ViewBag.Search">
+                    1
+                </a>
+            </li>
+
+            <li class="page-item disabled">
+                <span class="page-link">....</span>
+            </li>
+        }
+
+        <!-- Pages around current -->
+        @for (int i = Math.Max(1, currentPage - 1); i <= Math.Min(totalPages, currentPage + 1); i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-search="@ViewBag.Search">
+                    @i
+                </a>
+            </li>
+        }
+
+        <!-- Last page (optional) -->
+        @if (currentPage < totalPages - 1)
+        {
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@totalPages"
+                       asp-route-search="@ViewBag.Search">
+                    @totalPages
+                </a>
+            </li>
+        }
+
+        <!-- Next -->
+        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+            <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(currentPage + 1)"
+                   asp-route-search="@ViewBag.Search">
+                <i class="bi bi-chevron-right">next</i>
+            </a>
+        </li>
+
+    </ul>
+</nav>

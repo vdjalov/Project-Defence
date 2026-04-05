@@ -18,7 +18,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string search)
+        public async Task<IActionResult> Index(string search, int page = 1, int pageSize = 5)
         {
 
             List<AllDocumentsViewModel> documents = await this.context.Documents
@@ -36,14 +36,27 @@ namespace ClercSystem.Controllers
             {
                 search = search.Trim();
 
-                documents = documents.Where(d => d.Title.Contains(search, StringComparison.OrdinalIgnoreCase) 
-                                            || d.DepartmentName.Contains(search, StringComparison.OrdinalIgnoreCase)
-                                            || d.Createdby.Contains(search, StringComparison.OrdinalIgnoreCase)
-                                            || d.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                documents = documents
+                    .Where(d => d.Title.Contains(search, StringComparison.OrdinalIgnoreCase) 
+                        || d.DepartmentName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                        || d.Createdby.Contains(search, StringComparison.OrdinalIgnoreCase)
+                        || d.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)
                         ).ToList();
             }
+
+           int totalDocuments = documents.Count(); // total items in pagination
            
+            documents = documents // pagination logic
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Pass pagination data to the view using ViewBag
             ViewBag.Search = search;
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.totalPages = (int)Math.Ceiling((double)totalDocuments / pageSize);
+
 
             return View(documents);
         }
