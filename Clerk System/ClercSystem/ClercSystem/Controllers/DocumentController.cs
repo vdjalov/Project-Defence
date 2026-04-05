@@ -18,12 +18,10 @@ namespace ClercSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
+
             List<AllDocumentsViewModel> documents = await this.context.Documents
-                //.Include(d => d.Department)
-                //.Include(d => d.CreatedBy)
-                //.Include(d => d.Category)
                 .Where(d => !d.IsDeleted)
                 .Select(d => new AllDocumentsViewModel
                 {
@@ -33,6 +31,19 @@ namespace ClercSystem.Controllers
                     Createdby = d.CreatedBy.UserName,
                     CategoryName = d.Category.CategoryName
                 }).ToListAsync();
+
+           if(!string.IsNullOrEmpty(search))
+            {
+                search = search.Trim();
+
+                documents = documents.Where(d => d.Title.Contains(search, StringComparison.OrdinalIgnoreCase) 
+                                            || d.DepartmentName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                                            || d.Createdby.Contains(search, StringComparison.OrdinalIgnoreCase)
+                                            || d.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                        ).ToList();
+            }
+           
+            ViewBag.Search = search;
 
             return View(documents);
         }

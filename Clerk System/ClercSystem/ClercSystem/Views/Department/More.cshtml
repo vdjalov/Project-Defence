@@ -1,0 +1,14 @@
+﻿@using ClercSystem.ViewModels.Department;
+@model DepartmentMoreViewModel;
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>DETAILS</h2>
+
+<p><strong>Name:</strong> @Model.Name</p>
+<p><strong>Location:</strong> @Model.Location</p>
+
+
+<a asp-action="Index" class="btn btn-primary">Back to All Departments</a>

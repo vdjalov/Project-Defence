@@ -104,6 +104,28 @@ namespace ClercSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> More(Guid id)
+        {
+            DepartmentMoreViewModel ?department = await this.context.Departments
+                .Where(d => d.DepartmentId == id)
+                .Select(d => new DepartmentMoreViewModel
+                {
+                    Name = d.Name,
+                    Location = d.Location
+                }).FirstOrDefaultAsync();
+
+            if(department == null)
+            {
+                TempData["ErrorMessage"] = "Department not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(department);
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -111,7 +133,19 @@ namespace ClercSystem.Controllers
 
             if (department == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Department not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            List<Document> documents = await this.context.Documents
+                .Where(d => d.DepartmentId == id)
+                .ToListAsync();
+            string documentTitles = string.Join(", ", documents.Select(d => d.Title));
+
+            if(documentTitles.Length > 0)
+            {
+                TempData["ErrorMessage"] = $"Cannot delete department. It is associated with the following documents: {documentTitles}. Please reassign or delete these documents first.";
+                return RedirectToAction(nameof(Index));
             }
 
             this.context.Departments.Remove(department);
