@@ -35,12 +35,26 @@ namespace ClercSystem.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsManager")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -77,6 +91,8 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -106,7 +122,7 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ClercSystem.Data.Models.Department", b =>
@@ -127,7 +143,7 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasKey("DepartmentId");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("ClercSystem.Data.Models.Document", b =>
@@ -179,7 +195,7 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Documents", (string)null);
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("ClercSystem.Data.Models.DocumentLog", b =>
@@ -208,7 +224,7 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasIndex("DocumentId");
 
-                    b.ToTable("DocumentLogs", (string)null);
+                    b.ToTable("DocumentLogs");
                 });
 
             modelBuilder.Entity("ClercSystem.Data.Models.DocumentUser", b =>
@@ -226,7 +242,7 @@ namespace ClercSystem.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DocumentsUsers", (string)null);
+                    b.ToTable("DocumentsUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -360,6 +376,17 @@ namespace ClercSystem.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ClercSystem.Data.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("ClercSystem.Data.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("ClercSystem.Data.Models.Document", b =>
                 {
                     b.HasOne("ClercSystem.Data.Models.Category", "Category")
@@ -415,7 +442,7 @@ namespace ClercSystem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("ClercSystem.Data.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("DocumentsUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -474,6 +501,11 @@ namespace ClercSystem.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ClercSystem.Data.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("DocumentsUsers");
                 });
 
             modelBuilder.Entity("ClercSystem.Data.Models.Category", b =>

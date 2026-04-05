@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClercSystem.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260404072451_initial")]
-    partial class initial
+    [Migration("20260405114602_application-added-features")]
+    partial class applicationaddedfeatures
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,12 +38,26 @@ namespace ClercSystem.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsManager")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -79,6 +93,8 @@ namespace ClercSystem.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -151,14 +167,23 @@ namespace ClercSystem.Data.Migrations
                     b.Property<Guid>("DepartmentId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("HasBeenAnswered")
                         .HasColumnType("bit");
 
-                    b.Property<int>("TimeToAnswer")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TimeToAnswer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -354,6 +379,17 @@ namespace ClercSystem.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ClercSystem.Data.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("ClercSystem.Data.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("ClercSystem.Data.Models.Document", b =>
                 {
                     b.HasOne("ClercSystem.Data.Models.Category", "Category")
@@ -409,7 +445,7 @@ namespace ClercSystem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("ClercSystem.Data.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("DocumentsUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -468,6 +504,11 @@ namespace ClercSystem.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ClercSystem.Data.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("DocumentsUsers");
                 });
 
             modelBuilder.Entity("ClercSystem.Data.Models.Category", b =>
