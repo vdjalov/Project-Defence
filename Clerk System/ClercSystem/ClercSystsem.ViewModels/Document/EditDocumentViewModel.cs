@@ -27,7 +27,12 @@ namespace ClercSystem.ViewModels.Document
         [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; } = null!;
 
+        public string DepartmentId { get; set; } = null!;
+
+        public string CategoryId { get; set; } = null!;
+
         public List<AllDepartmentsViewModel> Departments { get; set; } = new List<AllDepartmentsViewModel>();
+
         public List<AllCategoriesViewModel> Categories { get; set; } = new List<AllCategoriesViewModel>();
     }
 }

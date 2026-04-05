@@ -91,11 +91,109 @@ namespace ClercSystem.Controllers
             };
 
             await this.context.Documents.AddAsync(document);
+            
+
+            DocumentUser documentUser = new DocumentUser
+            {
+                DocumentId = document.Id,
+                UserId = userId,
+                Permission = PermissionType.Full
+
+            };
+
+            await this.context.DocumentsUsers.AddAsync(documentUser);
             await this.context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id) // edit document
+        {
+
+            bool isGuidValid = base.CheckIfGuidIsValid(id);
+
+            if (!isGuidValid)
+            {
+                TempData["ErrorMessage"] = "Invalid Id";
+                return RedirectToAction(nameof(Index));
+            }
+
+            Document? document = await this.context.Documents.FindAsync(id);
+
+
+            // only the creator of the document can edit it ?????
+            //if (document.CreatedById != base.GetUserIdAsGuid()) 
+            //{
+            //    TempData["ErrorMessage"] = "You do not have sufficient rights to work on this document";
+            //    return RedirectToAction(nameof(Index));
+            //}
+
+           EditDocumentViewModel editDocumentViewModel = new EditDocumentViewModel
+           {
+               Title = document.Title,
+               FilePath = document.FilePath,
+               CreatedOn = document.CreatedOn.ToString(),
+               TimeToAnswer = document.TimeToAnswer,
+               Description = document.Description,
+               DepartmentId = document.DepartmentId.ToString(),
+               CategoryId = document.CategoryId.ToString(),
+               Departments = await this.context.Departments
+                    .Select(d => new AllDepartmentsViewModel
+                    {
+                        DepartmentId = d.DepartmentId,
+                        Name = d.Name
+                    }).ToListAsync(),
+               Categories = await this.context.Categories
+                    .Select(c => new AllCategoriesViewModel
+                    {
+                        Id = c.Id,
+                        CategoryName = c.CategoryName
+                    }).ToListAsync()
+           };
+
+           return View(editDocumentViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Guid id, EditDocumentViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Oops something went awire.";
+                return View(model);
+            }
+
+            bool isGuidValid = base.CheckIfGuidIsValid(id);
+
+            if (!isGuidValid)
+            {
+                TempData["ErrorMessage"] = "Invalid Id";
+                return RedirectToAction(nameof(Index));
+            }
+            Document? document = await this.context.Documents.FindAsync(id);
+            if(document.CreatedById != base.GetUserIdAsGuid())
+            {
+                TempData["ErrorMessage"] = "You do not have sufficient rights to work on this document";
+                return RedirectToAction(nameof(Index));
+            }
+            DateTime date;
+            bool success = DateTime.TryParse(model.CreatedOn, out date);
+            if (!success)
+            {
+                throw new ArgumentException("Invalid date format for CreatedOn");
+            }
+            document.Title = model.Title;
+            document.FilePath = model.FilePath;
+            document.CreatedOn = date;
+            document.TimeToAnswer = model.TimeToAnswer;
+            document.Description = model.Description;
+            document.DepartmentId = Guid.Parse(model.DepartmentId);
+            document.CategoryId = Guid.Parse(model.CategoryId);
+            this.context.Update(document);
+            await this.context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
 
 
