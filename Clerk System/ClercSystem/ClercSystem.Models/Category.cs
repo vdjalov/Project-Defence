@@ -23,6 +23,7 @@ namespace ClercSystem.Data.Models
         [MinLength(DescriptionMinLength)]
         [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; } = null!;
+
         public ICollection<Document> Documents { get; set; } = new List<Document>();
     }
 }

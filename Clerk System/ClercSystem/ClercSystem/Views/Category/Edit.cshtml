@@ -1,7 +1,14 @@
 ﻿@using ClercSystem.ViewModels.Category;
 @model EditCategoryViewModel;
 
-<h2>Edit Cinema</h2>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Message"]
+    </div>
+}
+
+<h2>Edit Category</h2>
 
 <form asp-action="Edit" method="post">
     @Html.AntiForgeryToken() <!-- Adds anti-forgery token for CSRF protection -->

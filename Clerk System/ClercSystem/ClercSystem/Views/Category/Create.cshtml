@@ -1,6 +1,13 @@
 ﻿@using ClercSystem.ViewModels.Category;
 @model CreateCategoryViewModel;
 
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Message"]
+    </div>
+}
+
 <h2>Add a Category</h2>
 
 <form asp-action="Create" method="post">

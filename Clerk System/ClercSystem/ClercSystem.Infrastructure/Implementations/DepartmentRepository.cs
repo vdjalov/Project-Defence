@@ -22,7 +22,9 @@ namespace ClercSystem.Infrastructure.Implementations
 
         public async Task<Department?> GetByIdAsync(Guid id)
         {
-            return await this.context.Departments.FindAsync(id);
+            return await this.context.Departments
+                                .Include(d => d.Documents)
+                                .FirstOrDefaultAsync(d => d.DepartmentId == id);
         }
 
         public async Task<Department?> GetByNameAsync(string name)

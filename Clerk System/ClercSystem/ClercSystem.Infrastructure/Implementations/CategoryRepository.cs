@@ -20,9 +20,17 @@ namespace ClercSystem.Infrastructure.Implementations
             await this.context.SaveChangesAsync();
         }
 
-        public Task<bool> DeleteAndSaveAsync(Category category)
+        // Note: This method assumes that the category to be deleted is already tracked by the context.
+        public async Task<bool> DeleteAndSaveAsync(Category category)
         {
-            throw new NotImplementedException();
+            if (category == null) { 
+                return false;
+            }
+
+            this.context.Categories.Attach(category);
+            this.context.Categories.Remove(category);
+
+            return await this.context.SaveChangesAsync() > 0;
         }
 
         public async Task<List<Category>> GetAllAsync()
@@ -32,13 +40,15 @@ namespace ClercSystem.Infrastructure.Implementations
 
         public async Task<Category?> GetByIdAsync(Guid id)
         {
-            return await this.context.Categories.FindAsync(id);
+            return await this.context.Categories
+                                    .Include(d => d.Documents)
+                                    .FirstOrDefaultAsync(d => d.Id == id);
         }
 
         public async Task<Category?> GetByNameAsync(string name)
         {
             return await this.context.Categories
-               .FirstOrDefaultAsync(d => d.CategoryName == name);
+               .FirstOrDefaultAsync(d => d.CategoryName.ToLower() == name.ToLower());
         }
 
         public async Task SaveChangesAsync()

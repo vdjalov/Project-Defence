@@ -1,6 +1,6 @@
 ﻿using ClercSystem.Data;
 using ClercSystem.Data.Models;
-using ClercSystem.Services.Implementations;
+using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,29 +13,24 @@ namespace ClercSystem.Controllers
     public class CategoryController : BaseController
     {
         private readonly AppDbContext context;
-        private readonly CategoryService categoryService;
+        private readonly ICategoryService categoryService;
 
-        public CategoryController(AppDbContext _context, CategoryService _categoryService)
+        public CategoryController(AppDbContext _context, ICategoryService _categoryService)
         {
             this.context = _context;
             this.categoryService = _categoryService;
         }
 
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<AllCategoriesViewModel> categories = await this.categoryService.GetAllCategoriesAsync();
+            List<AllCategoriesViewModel> categories = 
+                await this.categoryService.GetAllCategoriesAsync();
 
-            List <AllCategoriesViewModel> categoriesView = await context.Categories
-                .Select(c => new AllCategoriesViewModel
-                {
-                    Id = c.Id,
-                    CategoryName = c.CategoryName
-                })
-                .ToListAsync();
-
-            return View(categoriesView);
+            return View(categories);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -49,110 +44,163 @@ namespace ClercSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateCategoryViewModel model)
         {
-            if (!ModelState.IsValid)
+            
+            bool categoryExists = await this.categoryService.CategoryExistsAsync(model.CategoryName);
+
+            if(categoryExists) // This check is necessary to prevent the creation of duplicate categories.
+            {
+                ModelState.AddModelError("CategoryName", "A category with this name already exists.");
+                return View(model);
+            }
+
+            if (!ModelState.IsValid) // This check is necessary to ensure that the model is valid 
             {
                 return View(model);
             }
 
-            Data.Models.Category category = new Data.Models.Category
+            bool hasBeenCreated = await this.categoryService.CreateCategoryAsync(model);
 
+            if(!hasBeenCreated) // This check is necessary to handle the case where the category creation fails for some reason (e.g., database error).
             {
-                CategoryName = model.CategoryName,
-                Description = model.Description
-            };
+                TempData["Message"] = "Category was not created.";
+                return View(model);
+            }
 
-            await this.context.Categories.AddAsync(category);
-            await this.context.SaveChangesAsync();
-
+            TempData["Message"] = "Category was created successfully.";
             return RedirectToAction(nameof(Index));
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(string id)
         {
-            Data.Models.Category? category = await context.Categories.FindAsync(id);
-            if (category == null)
+
+            bool isValidGuid = base.CheckIfGuidIsValid(id);
+
+            if (!isValidGuid) // checking if guid is valid, if not return to index with error message
             {
-                return NotFound();
+                TempData["Message"] = "Invalid department ID.";
+                return RedirectToAction(nameof(Index));
             }
 
-            EditCategoryViewModel model = new EditCategoryViewModel
+            bool checkIfCategorytExists = await this.categoryService.CategoryExistsByIdAsync(id);
+
+            if (!checkIfCategorytExists)
             {
-                Id = category.Id,
-                CategoryName = category.CategoryName,
-                Description = category.Description
-            };
+                TempData["Message"] = "Category not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            EditCategoryViewModel model = await this.categoryService.GetCategoryForEditByIdAsync(id);
+            
             return View(model);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Edit(EditCategoryViewModel model)
         {
-            if (!ModelState.IsValid)
+
+            bool isValidGuid = base.CheckIfGuidIsValid(model.Id.ToString());
+
+            if (!isValidGuid) // checking if guid is valid, if not return to index with error message
             {
+                TempData["Message"] = "Invalid department ID.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool categoryExists = await this.categoryService.CategoryExistsAsync(model.CategoryName);
+
+            if (categoryExists) // This check is necessary to prevent the creation of duplicate categories.
+            {
+                ModelState.AddModelError("CategoryName", "A category with this name already exists.");
                 return View(model);
             }
 
-            Data.Models.Category? category = await context.Categories.FindAsync(model.Id);
-
-            if (category == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                TempData["Message"] = "Invalid data.";
+                return View(model);
             }
 
-            category.CategoryName = model.CategoryName;
-            category.Description = model.Description;
-            this.context.Categories.Update(category);
+            bool checkIfCategorytExists = await this.categoryService.CategoryExistsByIdAsync(model.Id.ToString());
 
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> More(Guid id)
-        {
-            Data.Models.Category? category = await context.Categories.FindAsync(id);
-            if (category == null)
+            if (!checkIfCategorytExists) // This check is necessary to ensure that the category being edited actually exists in the database.
             {
-                TempData["ErrorMessage"] = "Category not found.";
+                TempData["Message"] = "Category not found.";
                 return RedirectToAction(nameof(Index));
             }
-            CategoryMoreViewModel model = new CategoryMoreViewModel
+
+            bool updated = await this.categoryService.UpdateCategoryAsync(model);
+            if(!updated)
             {
-                CategoryName = category.CategoryName,
-                Description = category.Description
-            };
+                TempData["Message"] = "Category was not updated.";
+                return View(model);
+            }
+
+            TempData["Message"] = "Category was updated successfully.";
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> More(string id)
+        {
+
+            bool isValidGuid = base.CheckIfGuidIsValid(id);
+
+            if (!isValidGuid) // checking if guid is valid, if not return to index with error message
+            {
+                TempData["Message"] = "Invalid Category ID.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool checkIfCategorytExists = await this.categoryService.CategoryExistsByIdAsync(id);
+           
+            if (!checkIfCategorytExists) // This check is necessary to ensure that the category being viewed actually exists in the database.
+            {
+                TempData["Message"] = "Category not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            CategoryMoreViewModel model = await this.categoryService.GetCategoryDetailsByIdAsync(id);
+           
             return View(model);
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(string id)
         {
-            Category? category = await context.Categories.FindAsync(id);
+            bool isValidGuid = base.CheckIfGuidIsValid(id);
 
-            if (category == null)
+            if (!isValidGuid) // checking if guid is valid, if not return to index with error message
             {
-                TempData["ErrorMessage"] = "Category not found.";
+                TempData["Message"] = "Invalid Category ID.";
                 return RedirectToAction(nameof(Index));
             }
 
-            List<Document> documents = await context.Documents
-                .Where(d => d.CategoryId == id)
-                .ToListAsync();
+            bool checkIfCategorytExists = await this.categoryService.CategoryExistsByIdAsync(id);
 
-            if(documents.Count > 0)
+            if (!checkIfCategorytExists) // This check is necessary to ensure that the category being viewed actually exists in the database.
             {
-                string documentTitles = string.Join(", ", documents.Select(d => d.Title));
-                TempData["ErrorMessage"] = "Cannot delete category with associated documents." + documentTitles;
+                TempData["Message"] = "Category not found.";
                 return RedirectToAction(nameof(Index));
             }
 
-            context.Categories.Remove(category);
-            await context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            bool checkIfThereIsAnyDocumentWithThisCategory = 
+                await this.categoryService.CheckIfThereIsAnyDocumentWithThisCategoryAsync(id);
+
+            if(checkIfThereIsAnyDocumentWithThisCategory) // This check is necessary to prevent the deletion of a category that has associated documents with it.
+            {
+                TempData["Message"] = "Cannot delete category with associated documents.";
+                return RedirectToAction(nameof(Index));
+            };
+
+           var (success, message) = await this.categoryService.DeleteCategoryAsync(id);
+           TempData["Message"] = message;
+
+           return RedirectToAction(nameof(Index));
 
         }
 

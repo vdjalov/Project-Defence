@@ -18,6 +18,7 @@ namespace ClercSystem.Services.Implementations
         public async Task<bool> CheckIfThereAreDocumentsAssociatedWithDepartmentAsync(string id)
         {
             Department? department = await this.departmentRepository.GetByIdAsync(Guid.Parse(id));
+
             if(department.Documents.Count > 0)
             {
                 return true;
