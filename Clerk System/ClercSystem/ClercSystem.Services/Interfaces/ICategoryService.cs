@@ -1,6 +1,6 @@
 ﻿namespace ClercSystem.Services.Interfaces
 {
-    public class ICategoryService
+    public interface ICategoryService
     {
 
     }

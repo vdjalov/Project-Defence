@@ -1,5 +1,9 @@
 using ClercSystem.Data;
 using ClercSystem.Data.Models;
+using ClercSystem.Infrastructure.Implementations;
+using ClercSystem.Infrastructure.Interfaces;
+using ClercSystem.Services.Implementations;
+using ClercSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +22,15 @@ namespace ClercSystem
                 options.UseSqlServer(connectionString);
             });
 
-                      
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
+
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+
+
+
+
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {
                 //SignIn settings

@@ -134,7 +134,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(Guid id) // edit document
+        public async Task<IActionResult> Edit(string id) // edit document
         {
 
             bool isGuidValid = base.CheckIfGuidIsValid(id);
@@ -182,7 +182,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Guid id, EditDocumentViewModel model)
+        public async Task<IActionResult> Edit(string id, EditDocumentViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -218,13 +218,13 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> More(Guid id) // view more details about a document
+        public async Task<IActionResult> More(string id) // view more details about a document
         {
             Document? document = await this.context.Documents
                 .Include(d => d.Department)
                 .Include(d => d.CreatedBy)
                 .Include(d => d.Category)
-                .FirstOrDefaultAsync(d => d.Id == id);
+                .FirstOrDefaultAsync(d => d.Id == Guid.Parse(id));
 
             if(document == null)
             {
@@ -257,7 +257,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet] // soft deleting a document so that it does not get lost permanently and can be restored if needed
-        public async Task<IActionResult> SoftDelete(Guid id)
+        public async Task<IActionResult> SoftDelete(string id)
         {
             Document? document = await this.context.Documents.FindAsync(id);
 

@@ -70,7 +70,10 @@ namespace ClercSystem.Infrastructure.Implementations
             await this.context.SaveChangesAsync();
         }
 
-     
-        
+        public Task<bool> ExistsAsync(string departmentName, string departmentLocation)
+        {
+            return this.context.Departments
+                .AnyAsync(d => d.Name.ToLower() == departmentName && d.Location.ToLower() == departmentLocation);
+        }
     }
 }

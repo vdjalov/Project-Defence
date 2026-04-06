@@ -15,10 +15,14 @@ namespace ClercSystem.Controllers
             return Guid.TryParse(userId, out Guid userGuid) ? userGuid : Guid.Empty;
         }
 
-        internal bool CheckIfGuidIsValid(Guid id)
+        internal bool CheckIfGuidIsValid(string id)
         {
-            bool isValid = Guid.TryParse(id.ToString(), out Guid result);
-
+            bool isValid = false;
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                isValid = Guid.TryParse(id, out Guid result);
+            }
+             
             return isValid;
         }
     }

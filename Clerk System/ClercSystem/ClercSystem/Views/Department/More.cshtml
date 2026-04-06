@@ -5,6 +5,13 @@
     ViewData["Title"] = "Details";
 }
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <h2>DETAILS</h2>
 
 <p><strong>Name:</strong> @Model.Name</p>

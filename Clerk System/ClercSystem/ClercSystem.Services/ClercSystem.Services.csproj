@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClercSystem.Infrastructure\ClercSystem.Infrastructure.csproj" />
+    <ProjectReference Include="..\ClercSystsem.ViewModels\ClercSystem.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>

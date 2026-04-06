@@ -16,5 +16,6 @@ namespace ClercSystem.Infrastructure.Interfaces
         Task<bool> DeleteAndSaveAsync(Department department);
 
         Task SaveChangesAsync();
+        Task<bool> ExistsAsync(string departmentName, string departmentLocation);
     }
 }

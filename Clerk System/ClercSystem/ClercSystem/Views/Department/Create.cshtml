@@ -1,6 +1,13 @@
 ﻿@using ClercSystem.ViewModels.Department;
 @model CreateDepartmentViewModel;
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <h2>Add a New Department</h2>
 
 <form asp-action="Create" method="post">

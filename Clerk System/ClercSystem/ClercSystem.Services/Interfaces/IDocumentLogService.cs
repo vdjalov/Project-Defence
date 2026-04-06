@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClercSystem.Services.Interfaces
 {
-    internal class IDocumentLogService
+    public interface IDocumentLogService
     {
     }
 }
