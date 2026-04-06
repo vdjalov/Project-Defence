@@ -1,5 +1,6 @@
 ﻿using ClercSystem.Data;
 using ClercSystem.Data.Models;
+using ClercSystem.Services.Implementations;
 using ClercSystem.ViewModels.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,16 +13,20 @@ namespace ClercSystem.Controllers
     public class CategoryController : BaseController
     {
         private readonly AppDbContext context;
+        private readonly CategoryService categoryService;
 
-        public CategoryController(AppDbContext _context)
+        public CategoryController(AppDbContext _context, CategoryService _categoryService)
         {
             this.context = _context;
+            this.categoryService = _categoryService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<AllCategoriesViewModel> categories = await context.Categories
+            List<AllCategoriesViewModel> categories = await this.categoryService.GetAllCategoriesAsync();
+
+            List <AllCategoriesViewModel> categoriesView = await context.Categories
                 .Select(c => new AllCategoriesViewModel
                 {
                     Id = c.Id,
@@ -29,7 +34,7 @@ namespace ClercSystem.Controllers
                 })
                 .ToListAsync();
 
-            return View(categories);
+            return View(categoriesView);
         }
 
         [HttpGet]
