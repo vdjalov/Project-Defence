@@ -10,7 +10,8 @@ namespace ClercSystem
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
@@ -51,10 +52,11 @@ namespace ClercSystem
 
             var app = builder.Build();
 
-            using (var scope = app.Services.CreateScope())
+            using (var scope = app.Services.CreateScope()) 
             {
                 var services = scope.ServiceProvider;
-                await AppDbSeeder.SeedDepartmentsAsync(services);
+                await AppDbSeeder.SeedDepartmentsAsync(services); // seed departments
+                await AppDbSeeder.SeedCategoriesAsync(services); // seed categories
             }
 
             // Configure the HTTP request pipeline.
