@@ -1,23 +1,20 @@
 ﻿using ClercSystem.Data;
-using ClercSystem.Data.Models;
 using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Department;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Controllers
 {
     [Authorize]
     public class DepartmentController : BaseController
     {
-        private readonly AppDbContext context;
         private readonly IDepartmentService departmentService;
 
-        public DepartmentController(AppDbContext _context, IDepartmentService _departmentService)
+        public DepartmentController(IDepartmentService _departmentService)
         {
             this.departmentService = _departmentService;
-            this.context = _context;
+           
         }
 
         [HttpGet]
@@ -125,7 +122,7 @@ namespace ClercSystem.Controllers
 
            bool departmentExists = await this.departmentService.DepartmentExistsByIdAsync(model.DepartmentId);
 
-            if (!departmentExists)
+            if (!departmentExists) // checking if department exists, if not return to index with error message
             {
                 TempData["ErrorMessage"] = "Department does not exist.";
                 return View(model);
@@ -133,7 +130,7 @@ namespace ClercSystem.Controllers
 
             bool isUpdated = await this.departmentService.EditDepartmentAsync(model);
 
-           if(!isUpdated)
+           if(!isUpdated) // checking if department is updated successfully
             {
                 TempData["ErrorMessage"] = "An error occurred while updating the department. Please try again.";
                 return View(model);
@@ -145,50 +142,70 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> More(Guid id)
+        public async Task<IActionResult> More(string id)
         {
-            DepartmentMoreViewModel ?department = await this.context.Departments
-                .Where(d => d.DepartmentId == id)
-                .Select(d => new DepartmentMoreViewModel
-                {
-                    Name = d.Name,
-                    Location = d.Location
-                }).FirstOrDefaultAsync();
+            bool isValidGuid = base.CheckIfGuidIsValid(id);
 
-            if(department == null)
+            if (!isValidGuid) // checking if guid is valid, if not return to index with error message
             {
-                TempData["ErrorMessage"] = "Department not found.";
+                TempData["ErrorMessage"] = "Invalid department ID.";
                 return RedirectToAction(nameof(Index));
             }
 
+            bool departmentExists = await this.departmentService.DepartmentExistsByIdAsync(Guid.Parse(id));
+
+            if (!departmentExists) // checking if department exists
+            {
+                TempData["ErrorMessage"] = "Department does not exist.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            DepartmentMoreViewModel? department = await this.departmentService.GetDepartmentDetailsAsync(id);
+               
             return View(department);
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(string id)
         {
-            Department? department = await this.context.Departments.FindAsync(id);
+            bool isValidGuid = base.CheckIfGuidIsValid(id);
 
-            if (department == null)
+            if (!isValidGuid) // checking if guid is valid, if not return to index with error message
+            {
+                TempData["ErrorMessage"] = "Invalid department ID.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool departmentExists = await this.departmentService.DepartmentExistsByIdAsync(Guid.Parse(id));
+
+            if (!departmentExists) // checking if department exists
             {
                 TempData["ErrorMessage"] = "Department not found.";
                 return RedirectToAction(nameof(Index));
             }
 
-            List<Document> documents = await this.context.Documents
-                .Where(d => d.DepartmentId == id)
-                .ToListAsync();
-            string documentTitles = string.Join(", ", documents.Select(d => d.Title));
+           bool checkIfThereAreDocumentsAssociatedWithDepartment = 
+                    await this.departmentService.CheckIfThereAreDocumentsAssociatedWithDepartmentAsync(id);
 
-            if(documentTitles.Length > 0)
+            if(checkIfThereAreDocumentsAssociatedWithDepartment)
             {
-                TempData["ErrorMessage"] = $"Cannot delete department. It is associated with the following documents: {documentTitles}. Please reassign or delete these documents first.";
+                TempData["ErrorMessage"] = "Cannot delete department. It is associated with documents:";
                 return RedirectToAction(nameof(Index));
             }
 
-            this.context.Departments.Remove(department);
-            await this.context.SaveChangesAsync();
+            try
+            {
+
+                bool departmentDeletionSiccess = await this.departmentService.DeleteDepartmentAsync(id);
+                TempData["ErrorMessage"] = "Department deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Unable to delete. Check if there is any documents associated with the department?";
+                return RedirectToAction(nameof(Index));
+
+            }
 
             return RedirectToAction(nameof(Index));
         }

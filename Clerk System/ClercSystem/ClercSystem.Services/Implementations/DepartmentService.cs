@@ -2,9 +2,6 @@
 using ClercSystem.Infrastructure.Interfaces;
 using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Department;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClercSystem.Services.Implementations
 {
@@ -18,6 +15,17 @@ namespace ClercSystem.Services.Implementations
             this.departmentRepository = _departmentRepository;
         }
 
+        public async Task<bool> CheckIfThereAreDocumentsAssociatedWithDepartmentAsync(string id)
+        {
+            Department? department = await this.departmentRepository.GetByIdAsync(Guid.Parse(id));
+            if(department.Documents.Count > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         // create new department
         public async Task CreateDepartmentAsync(CreateDepartmentViewModel model)
         {
@@ -28,6 +36,16 @@ namespace ClercSystem.Services.Implementations
             };
            
             await this.departmentRepository.AddAndSaveAsync(department);
+        }
+
+        // delete department by id
+        public async Task<bool> DeleteDepartmentAsync(string id)
+        {
+            Department department = await this.departmentRepository.GetByIdAsync(Guid.Parse(id));
+
+            bool isDeleted = await departmentRepository.DeleteAndSaveAsync(department);
+
+            return isDeleted;
         }
 
         // checking if department already exists by name and location
@@ -48,6 +66,7 @@ namespace ClercSystem.Services.Implementations
             return true;
         }
 
+        // edit department by id
         public async Task<bool> EditDepartmentAsync(EditDepartmentViewModel model)
         {
             Department? department = await this.departmentRepository.GetByIdAsync(model.DepartmentId);
@@ -79,6 +98,21 @@ namespace ClercSystem.Services.Implementations
             return new CreateDepartmentViewModel();
         }
 
+        // return department details by id
+        public async Task<DepartmentMoreViewModel?> GetDepartmentDetailsAsync(string id)
+        {
+            Department? department = await this.departmentRepository.GetByIdAsync(Guid.Parse(id));
+            DepartmentMoreViewModel? departmentDetails = new DepartmentMoreViewModel()
+            {
+                Name = department.Name,
+                Location = department.Location
+            };
+            
+            return departmentDetails;
+        }
+
+
+        // return department edit model by id
         public async Task<EditDepartmentViewModel> GetEditModelAsync(Guid departmentId)
         {
             Department? department = await this.departmentRepository.GetByIdAsync(departmentId);

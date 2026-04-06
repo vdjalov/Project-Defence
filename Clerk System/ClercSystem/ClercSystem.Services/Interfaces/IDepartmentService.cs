@@ -16,9 +16,9 @@ namespace ClercSystem.Services.Interfaces
         Task <bool> DepartmentExistsByIdAsync(Guid departmentId);
         Task<EditDepartmentViewModel> GetEditModelAsync(Guid departmentId);
         Task<bool> EditDepartmentAsync(EditDepartmentViewModel model);
-
-        //Task<DepartmentMoreViewModel?> GetDepartmentDetailsAsync(Guid id);
-        //Task<(bool Success, string ErrorMessage)> DeleteDepartmentAsync(Guid id);
+        Task<DepartmentMoreViewModel?> GetDepartmentDetailsAsync(string id);
+        Task<bool> CheckIfThereAreDocumentsAssociatedWithDepartmentAsync(string id);
+        Task<bool> DeleteDepartmentAsync(string id);
 
     }
 }
