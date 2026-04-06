@@ -1,7 +1,9 @@
 <Solution>
   <Folder Name="/Data/">
     <Project Path="ClercSystem.Data/ClercSystem.Data.csproj" Id="b3767fef-d0d4-45b1-80cc-86620a4fb25d" />
+    <Project Path="ClercSystem.Infrastructure/ClercSystem.Infrastructure.csproj" Id="2291fc18-acd6-4981-9b28-a449ee88584b" />
     <Project Path="ClercSystem.Models/ClercSystem.Data.Models.csproj" Id="2285670d-5041-4da2-9c9d-d00d8dd47265" />
+    <Project Path="ClercSystem.Services/ClercSystem.Services.csproj" Id="3b1c0c02-6e24-41f9-99f3-09f7b9149525" />
   </Folder>
   <Folder Name="/Web/">
     <Project Path="ClercSystem.Common/ClercSystem.Common.csproj" Id="8abdea83-930f-4fa0-b339-45f102e2aecd" />
