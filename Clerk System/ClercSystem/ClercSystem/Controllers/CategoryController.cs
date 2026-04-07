@@ -45,7 +45,7 @@ namespace ClercSystem.Controllers
         public async Task<IActionResult> Create(CreateCategoryViewModel model)
         {
             
-            bool categoryExists = await this.categoryService.CategoryExistsAsync(model.CategoryName);
+            bool categoryExists = await this.categoryService.CategoryExistsAsync(model.CategoryName, model.Description);
 
             if(categoryExists) // This check is necessary to prevent the creation of duplicate categories.
             {
@@ -109,11 +109,11 @@ namespace ClercSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            bool categoryExists = await this.categoryService.CategoryExistsAsync(model.CategoryName);
+            bool categoryExists = await this.categoryService.CategoryExistsAsync(model.CategoryName, model.Description);
 
             if (categoryExists) // This check is necessary to prevent the creation of duplicate categories.
             {
-                ModelState.AddModelError("CategoryName", "A category with this name already exists.");
+                ModelState.AddModelError("CategoryName", "A category with this name already exists or no changes were made.");
                 return View(model);
             }
 

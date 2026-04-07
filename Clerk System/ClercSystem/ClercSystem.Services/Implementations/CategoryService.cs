@@ -16,9 +16,9 @@ namespace ClercSystem.Services.Implementations
 
         //  This method checks if a category exists by its name.
         //  It retrieves the category using the repository and returns true if it exists, otherwise false.
-        public async Task<bool> CategoryExistsAsync(string categoryName)
+        public async Task<bool> CategoryExistsAsync(string categoryName, string categoryDescription)
         {
-            Category? category = await this.categoryRepository.GetByNameAsync(categoryName);
+            Category? category = await this.categoryRepository.GetByNameAndDescriptionAsync(categoryName, categoryDescription);
 
             if(category == null)
             {

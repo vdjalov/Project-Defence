@@ -18,6 +18,7 @@ namespace ClercSystem.ViewModels.Document
 
         public string CreatedOn { get; set; } = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss");
 
+        [Required]
         public string TimeToAnswer { get; set; } = DateTime.Now.AddDays(TimeToAnswerInDays).ToString();
 
         public bool HasBeenAnswered { get; set; } = false;

@@ -45,12 +45,13 @@ namespace ClercSystem.Infrastructure.Implementations
                                     .FirstOrDefaultAsync(d => d.Id == id);
         }
 
-        public async Task<Category?> GetByNameAsync(string name)
+        public async Task<Category?> GetByNameAndDescriptionAsync(string name, string description)
         {
             return await this.context.Categories
-               .FirstOrDefaultAsync(d => d.CategoryName.ToLower() == name.ToLower());
+               .FirstOrDefaultAsync(d => d.CategoryName == name && d.Description == description);
         }
 
+       
         public async Task SaveChangesAsync()
         {
             await this.context.SaveChangesAsync();

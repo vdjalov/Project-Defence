@@ -13,6 +13,7 @@ namespace ClercSystem.Infrastructure.Interfaces
         Task AddAndSaveAsync(Document department);
         Task<bool> UpdateAndSaveAsync(Document document);
         Task<bool> DeleteAndSaveAsync(Document document);
+        Task<bool> SoftDeleteAsync(Guid documentId);
         Task SaveChangesAsync();
     }
 }

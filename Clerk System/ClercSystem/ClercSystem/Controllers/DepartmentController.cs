@@ -1,5 +1,4 @@
-﻿using ClercSystem.Data;
-using ClercSystem.Services.Interfaces;
+﻿using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Department;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

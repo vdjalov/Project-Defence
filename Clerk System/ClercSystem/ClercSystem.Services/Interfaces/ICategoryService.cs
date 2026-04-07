@@ -4,7 +4,7 @@ namespace ClercSystem.Services.Interfaces
 {
     public interface ICategoryService
     {
-        Task<bool> CategoryExistsAsync(string categoryName);
+        Task<bool> CategoryExistsAsync(string categoryName, string categoryDescription);
         Task<List<AllCategoriesViewModel>> GetAllCategoriesAsync();
         Task<bool> CreateCategoryAsync(CreateCategoryViewModel model);
         Task<bool> CategoryExistsByIdAsync(string id);

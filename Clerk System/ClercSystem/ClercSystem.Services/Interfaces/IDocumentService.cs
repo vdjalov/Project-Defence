@@ -10,11 +10,13 @@ namespace ClercSystem.Services.Interfaces
         
         Task<(IEnumerable<AllDocumentsViewModel> Docs, int TotalCount)> GetAllDocumentsAsync(string search, int page, int pageSize);
         Task<CreateDocumentViewModel> GetCreateModelAsync();
-        //Task CreateAsync(CreateDocumentViewModel model, Guid userId);
-        //Task<EditDocumentViewModel?> GetEditModelAsync(string id, Guid userId);
-        //Task<bool> EditAsync(string id, EditDocumentViewModel model, Guid userId);
-        //Task<DocumentMoreViewModel?> GetDetailsAsync(string id);
-        //Task<bool> SoftDeleteAsync(string id, Guid userId);
-        
+        Task<bool> CreateDocumentAsync(CreateDocumentViewModel model, Guid userId, DateTime date);
+        Task<EditDocumentViewModel?> GetEditModelAsync(Guid DocumentId);
+        Task<bool> EditDocumentAsync( Guid userId, EditDocumentViewModel model);
+        Task<bool> CheckIfDocumentCreatorIsValid(Guid documentId, Guid userId);
+        Task<bool> CheckIfDocumentExists(Guid guid);
+        Task<DocumentMoreViewModel?> GetDetailsAsync(Guid id);
+        Task<bool> SoftDeleteAsync(Guid userId);
+
     }
 }

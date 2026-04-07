@@ -70,5 +70,22 @@ namespace ClercSystem.Infrastructure.Implementations
 
             return true;
         }
+
+        // Soft delete a document by setting its IsDeleted property to true
+        public async Task<bool> SoftDeleteAsync(Guid documentId)
+        {
+            Document document = await this.GetByIdAsync(documentId);
+
+            if(document == null)
+            {
+                return false;
+            }
+
+            document.IsDeleted = true;
+            this.context.Update(document);
+            await this.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

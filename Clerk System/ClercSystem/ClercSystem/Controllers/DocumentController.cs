@@ -47,132 +47,115 @@ namespace ClercSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateDocumentViewModel model)
         {
+            
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMessage"] = "Oops something went awire.";
                 return View(model);
             }
 
-            Guid userId = Guid.Parse(base.GetUserId());
 
+            Guid userId = Guid.Parse(base.GetUserId());
+            if(userId == Guid.Empty)
+            {
+                TempData["Message"] = "User not found!";
+                return View(model);
+            }
+           
             DateTime date;
             bool success = DateTime.TryParse(model.CreatedOn, out date);
 
             if(!success)
             {
-                throw new ArgumentException("Invalid date format for CreatedOn");
+                TempData["Message"] = "Invalid date format.";
+                return View(model);
             }
 
-            Document document = new Document
+            bool hasDocumentBeenCreated = await this.documentService.CreateDocumentAsync(model, userId, date);
+
+            if(!hasDocumentBeenCreated)
             {
-                Title = model.Title,
-                FilePath = model.FilePath,
-                CreatedOn = date,
-                TimeToAnswer = model.TimeToAnswer,
-                HasBeenAnswered = model.HasBeenAnswered,
-                Description = model.Description,
-                DepartmentId = Guid.Parse(model.DepartmentId),
-                CategoryId = Guid.Parse(model.CategoryId),
-                CreatedById = userId
-            };
+                TempData["Message"] = "Oops something went awire.";
+                return View(model);
+            }
 
-            await this.context.Documents.AddAsync(document);
-            
-
-            DocumentUser documentUser = new DocumentUser
-            {
-                DocumentId = document.Id,
-                UserId = userId,
-                Permission = PermissionType.Full
-
-            };
-
-            await this.context.DocumentsUsers.AddAsync(documentUser);
-            await this.context.SaveChangesAsync();
-
+            TempData["Message"] = "Document created successfully!";
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(string id) // edit document
+        public async Task<IActionResult> Edit(string id) // edit document get view
         {
-
             bool isGuidValid = base.CheckIfGuidIsValid(id);
 
             if (!isGuidValid)
             {
-                TempData["ErrorMessage"] = "Invalid Id";
+                TempData["Message"] = "Invalid Id";
                 return RedirectToAction(nameof(Index));
             }
 
-            Document? document = await this.context.Documents.FindAsync(id);
+            Guid userId = base.GetUserIdAsGuid();   
+            bool checkIfDocumentCreatorIsValidOrDocumentExists = 
+                await this.documentService.CheckIfDocumentCreatorIsValid(Guid.Parse(id), userId);
 
 
             //only the creator of the document can edit it ?????
-            if (document.CreatedById != base.GetUserIdAsGuid())
+            if (!checkIfDocumentCreatorIsValidOrDocumentExists)
             {
-                TempData["ErrorMessage"] = "You do not have sufficient rights to work on this document";
+                TempData["Message"] = "You do not have sufficient rights to work on this document or it does not exist.";
                 return RedirectToAction(nameof(Index));
             }
 
-            EditDocumentViewModel editDocumentViewModel = new EditDocumentViewModel
-           {
-               Title = document.Title,
-               FilePath = document.FilePath,
-               TimeToAnswer = document.TimeToAnswer,
-               Description = document.Description,
-               HasBeenAnswered = document.HasBeenAnswered,
-               DepartmentId = document.DepartmentId.ToString(),
-               CategoryId = document.CategoryId.ToString(),
-               Departments = await this.context.Departments
-                    .Select(d => new AllDepartmentsViewModel
-                    {
-                        DepartmentId = d.DepartmentId,
-                        Name = d.Name
-                    }).ToListAsync(),
-               Categories = await this.context.Categories
-                    .Select(c => new AllCategoriesViewModel
-                    {
-                        Id = c.Id,
-                        CategoryName = c.CategoryName
-                    }).ToListAsync()
-           };
+            EditDocumentViewModel editDocumentViewModel = await this.documentService.GetEditModelAsync(Guid.Parse(id));
 
+            if(editDocumentViewModel == null)
+            {
+                TempData["Message"] = "Document not found!";
+                return RedirectToAction(nameof(Index));
+            }
+           
            return View(editDocumentViewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(string id, EditDocumentViewModel model)
         {
+            bool isGuidValid = base.CheckIfGuidIsValid(id);
+
+            if (!isGuidValid) // checking if the id is a valid guid to prevent errors when trying to find the document in the database
+            {
+                TempData["Message"] = "Invalid Id";
+                return View(model);
+            }
+
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMessage"] = "Oops something went awire.";
                 return View(model);
             }
 
-            bool isGuidValid = base.CheckIfGuidIsValid(id);
+            Guid userId = base.GetUserIdAsGuid();
+            bool checkIfDocumentCreatorIsValidOrDocumentExists =
+                await this.documentService.CheckIfDocumentCreatorIsValid(Guid.Parse(id), userId);
 
-            if (!isGuidValid)
+
+            //only the creator of the document can edit it ?????
+            if (!checkIfDocumentCreatorIsValidOrDocumentExists)
             {
-                TempData["ErrorMessage"] = "Invalid Id";
+                TempData["Message"] = "You do not have sufficient rights to work on this document or it does not exist.";
                 return RedirectToAction(nameof(Index));
             }
-            Document? document = await this.context.Documents.FindAsync(id);
-            if(document.CreatedById != base.GetUserIdAsGuid())
+
+
+            bool documentUpdated = await this.documentService.EditDocumentAsync(Guid.Parse(id), model);
+
+           if(!documentUpdated)
             {
-                TempData["ErrorMessage"] = "You do not have sufficient rights to work on this document";
-                return RedirectToAction(nameof(Index));
+                TempData["Message"] = "Document was not updated successfuly.";
+                return View(model);
             }
-          
-            document.Title = model.Title;
-            document.FilePath = model.FilePath;
-            document.TimeToAnswer = model.TimeToAnswer;
-            document.Description = model.Description;
-            document.DepartmentId = Guid.Parse(model.DepartmentId);
-            document.CategoryId = Guid.Parse(model.CategoryId);
-            document.HasBeenAnswered = model.HasBeenAnswered;
-            this.context.Update(document);
-            await this.context.SaveChangesAsync();
+
+            TempData["Message"] = "Document updated successfully!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -180,72 +163,66 @@ namespace ClercSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> More(string id) // view more details about a document
         {
-            Document? document = await this.context.Documents
-                .Include(d => d.Department)
-                .Include(d => d.CreatedBy)
-                .Include(d => d.Category)
-                .FirstOrDefaultAsync(d => d.Id == Guid.Parse(id));
-
-            if(document == null)
-            {
-                TempData["ErrorMessage"] = "Oops something went awire.";
-                return RedirectToAction(nameof(Index));
-            }
             bool isGuidValid = base.CheckIfGuidIsValid(id);
             if (!isGuidValid)
             {
                 TempData["ErrorMessage"] = "Invalid Id";
                 return RedirectToAction(nameof(Index));
             }
-            DocumentMoreViewModel documentMoreViewModel = new DocumentMoreViewModel
+
+            bool checkIfDocumentExists = await this.documentService.CheckIfDocumentExists(Guid.Parse(id));
+            if(checkIfDocumentExists == false) 
             {
-                Title = document.Title,
-                FilePath = document.FilePath,
-                CreatedOn = document.CreatedOn,
-                TimeToAnswer = document.TimeToAnswer,
-                HasBeenAnswered = document.HasBeenAnswered,
-                Description = document.Description,
-                DepartmentName = document.Department.Name,
-                CreatedBy = document.CreatedBy.UserName,
-                CategoryName = document.Category.CategoryName,
-            };
-            return View(documentMoreViewModel);
+                TempData["ErrorMessage"] = "Document not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            DocumentMoreViewModel model = await this.documentService.GetDetailsAsync(Guid.Parse(id));
+
+            return View(model);
         }
-
-
-
 
 
         [HttpGet] // soft deleting a document so that it does not get lost permanently and can be restored if needed
         public async Task<IActionResult> SoftDelete(string id)
         {
-            Document? document = await this.context.Documents.FindAsync(id);
-
-            if(document == null)
-            {
-                TempData["ErrorMessage"] = "Oops something went awire.";
-                return RedirectToAction(nameof(Index));
-            }
 
             bool isGuidValid = base.CheckIfGuidIsValid(id);
-            
-            if (!isGuidValid)
+            if (!isGuidValid) // checking if the id is a valid guid to prevent errors when trying to find the document in the database
             {
                 TempData["ErrorMessage"] = "Invalid Id";
                 return RedirectToAction(nameof(Index));
             }
 
-           if(document.CreatedById != base.GetUserIdAsGuid())
+            bool checkIfDocumentExists = await this.documentService.CheckIfDocumentExists(Guid.Parse(id));
+            if (checkIfDocumentExists == false) // checking if the document exists in the database before trying to delete it
             {
-                TempData["ErrorMessage"] = "You do not have sufficient rights to work on this document";
+                TempData["ErrorMessage"] = "Document not found.";
                 return RedirectToAction(nameof(Index));
             }
 
-           document.IsDeleted = true;
-           this.context.Update(document);
-           await this.context.SaveChangesAsync();
+            Guid userId = base.GetUserIdAsGuid();
+            bool checkIfDocumentCreatorIsValidOrDocumentExists =
+                await this.documentService.CheckIfDocumentCreatorIsValid(Guid.Parse(id), userId);
 
-           return RedirectToAction(nameof(Index));
+
+            //only the creator of the document can edit it ?????
+            if (!checkIfDocumentCreatorIsValidOrDocumentExists)
+            {
+                TempData["Message"] = "You do not have sufficient rights to work on this document or it does not exist.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool documentSoftDeleted = await this.documentService.SoftDeleteAsync(Guid.Parse(id));  
+
+            if(documentSoftDeleted == false)
+            {
+                TempData["Message"] = "Document was not deleted successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["Message"] = "Document deleted successfully!";
+            return RedirectToAction(nameof(Index));
         }
 
     }

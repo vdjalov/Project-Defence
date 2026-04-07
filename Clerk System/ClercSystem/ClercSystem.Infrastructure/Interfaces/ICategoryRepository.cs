@@ -9,7 +9,7 @@ namespace ClercSystem.Infrastructure.Interfaces
     {
         IQueryable<Category> GetAll();
         Task<Category?> GetByIdAsync(Guid id);
-        Task<Category?> GetByNameAsync(string name);
+        Task<Category?> GetByNameAndDescriptionAsync(string name, string description);
 
         Task AddAndSaveAsync(Category category);
         Task<bool> UpdateAndSaveAsync(Category category);
