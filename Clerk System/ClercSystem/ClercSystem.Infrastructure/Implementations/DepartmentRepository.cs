@@ -15,9 +15,9 @@ namespace ClercSystem.Infrastructure.Implementations
             this.context = _context;
         }
 
-        public async Task<List<Department>> GetAllAsync()
+        public IQueryable<Department> GetAll()
         {
-            return await this.context.Departments.ToListAsync();
+            return this.context.Departments;
         }
 
         public async Task<Department?> GetByIdAsync(Guid id)

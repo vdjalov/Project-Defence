@@ -1,5 +1,6 @@
 ﻿using ClercSystem.Data;
 using ClercSystem.Data.Models;
+using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Category;
 using ClercSystem.ViewModels.Department;
 using ClercSystem.ViewModels.Document;
@@ -13,74 +14,33 @@ namespace ClercSystem.Controllers
     public class DocumentController : BaseController
     {
         private readonly AppDbContext context;
+        private readonly IDocumentService documentService;
 
-        public DocumentController(AppDbContext _context)
+        public DocumentController(AppDbContext _context, IDocumentService _documentService)
         {
             this.context = _context;
+            this.documentService = _documentService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index(string search, int page = 1, int pageSize = 5)
+        [HttpGet] 
+        public async Task<IActionResult> Index(string search, int page, int pageSize) // view all documents with pagination and search functionality
         {
 
-            List<AllDocumentsViewModel> documents = await this.context.Documents
-                .Where(d => !d.IsDeleted)
-                .Select(d => new AllDocumentsViewModel
-                {
-                    Id = d.Id,
-                    Title = d.Title,
-                    DepartmentName = d.Department.Name,
-                    Createdby = d.CreatedBy.UserName,
-                    CategoryName = d.Category.CategoryName
-                }).ToListAsync();
+            var result = await documentService.GetAllDocumentsAsync(search, page = 1, pageSize = 5);
 
-           if(!string.IsNullOrEmpty(search))
-            {
-                search = search.Trim();
-
-                documents = documents
-                    .Where(d => d.Title.Contains(search, StringComparison.OrdinalIgnoreCase) 
-                        || d.DepartmentName.Contains(search, StringComparison.OrdinalIgnoreCase)
-                        || d.Createdby.Contains(search, StringComparison.OrdinalIgnoreCase)
-                        || d.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)
-                        ).ToList();
-            }
-
-           int totalDocuments = documents.Count(); // total items in pagination
-           
-            documents = documents // pagination logic
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            // Pass pagination data to the view using ViewBag
             ViewBag.Search = search;
             ViewBag.CurrentPage = page;
             ViewBag.PageSize = pageSize;
-            ViewBag.totalPages = (int)Math.Ceiling((double)totalDocuments / pageSize);
+            ViewBag.totalPages = (int)Math.Ceiling((double)result.TotalCount / pageSize);
 
-
-            return View(documents);
+            return View(result.Docs);
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            CreateDocumentViewModel createDocumentViewModel = new CreateDocumentViewModel();
-            createDocumentViewModel.Departments = await this.context.Departments
-                .Select(d => new AllDepartmentsViewModel
-                {
-                    DepartmentId = d.DepartmentId,
-                    Name = d.Name
-                }).ToListAsync();
-
-            createDocumentViewModel.Categories = await this.context.Categories
-                 .Select(c => new AllCategoriesViewModel
-                 {
-                     Id = c.Id,
-                     CategoryName = c.CategoryName
-                 }).ToListAsync();
-
+            CreateDocumentViewModel createDocumentViewModel = await documentService.GetCreateModelAsync();
+            
             return View(createDocumentViewModel);
         }
 

@@ -2,6 +2,7 @@
 using ClercSystem.Infrastructure.Interfaces;
 using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Category;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Services.Implementations
 {
@@ -79,15 +80,15 @@ namespace ClercSystem.Services.Implementations
         // This method retrieves all categories and maps them to a list of AllCategoriesViewModel.
         public async Task<List<AllCategoriesViewModel>> GetAllCategoriesAsync()
         {
-            List<Category> categories = await categoryRepository.GetAllAsync();
+            IQueryable<Category> categories = categoryRepository.GetAll();
 
-            List<AllCategoriesViewModel> categoriesView = categories
+            List<AllCategoriesViewModel> categoriesView = await categories
                .Select(c => new AllCategoriesViewModel
                {
                    Id = c.Id,
                    CategoryName = c.CategoryName
                })
-               .ToList();
+               .ToListAsync();
 
             return categoriesView;
         }

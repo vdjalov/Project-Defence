@@ -33,9 +33,9 @@ namespace ClercSystem.Infrastructure.Implementations
             return await this.context.SaveChangesAsync() > 0;
         }
 
-        public async Task<List<Category>> GetAllAsync()
+        public IQueryable<Category> GetAll()
         {
-            return await this.context.Categories.ToListAsync();
+            return this.context.Categories;
         }
 
         public async Task<Category?> GetByIdAsync(Guid id)

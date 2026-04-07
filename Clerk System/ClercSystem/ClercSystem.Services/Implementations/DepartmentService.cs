@@ -2,6 +2,7 @@
 using ClercSystem.Infrastructure.Interfaces;
 using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Department;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Services.Implementations
 {
@@ -80,14 +81,14 @@ namespace ClercSystem.Services.Implementations
         // list all departments
         public async Task<List<AllDepartmentsViewModel>> GetAllDepartmentsAsync()
         {
-            List<Department> departments = await this.departmentRepository.GetAllAsync();
-            List<AllDepartmentsViewModel> departmentsViewModel  = departments
+            IQueryable<Department> departments = this.departmentRepository.GetAll();
+            List<AllDepartmentsViewModel> departmentsViewModel  = await departments
               .Select(d => new AllDepartmentsViewModel
               {
                   DepartmentId = d.DepartmentId,
                   Name = d.Name,
                   Location = d.Location,
-              }).ToList();
+              }).ToListAsync();
 
             return departmentsViewModel;
 

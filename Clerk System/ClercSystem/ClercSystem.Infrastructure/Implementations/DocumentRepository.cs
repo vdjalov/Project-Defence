@@ -35,9 +35,9 @@ namespace ClercSystem.Infrastructure.Implementations
         }
 
        
-        public async Task<List<Document>> GetAllAsync()
+        public  IQueryable<Document> GetAll()
         {
-            return await this.context.Documents.ToListAsync();
+            return  this.context.Documents;
         }
 
         public async Task<Document?> GetByIdAsync(Guid id)

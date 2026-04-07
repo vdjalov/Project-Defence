@@ -7,7 +7,7 @@ namespace ClercSystem.Infrastructure.Interfaces
 {
     public interface IDocumentRepository
     {
-        Task<List<Document>> GetAllAsync();
+        IQueryable<Document> GetAll();
         Task<Document?> GetByIdAsync(Guid id);
         Task<Document?> GetByTitleAsync(string name);
         Task AddAndSaveAsync(Document department);

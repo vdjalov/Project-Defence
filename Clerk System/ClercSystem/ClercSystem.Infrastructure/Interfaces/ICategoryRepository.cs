@@ -7,7 +7,7 @@ namespace ClercSystem.Infrastructure.Interfaces
 {
     public interface ICategoryRepository
     {
-        Task<List<Category>> GetAllAsync();
+        IQueryable<Category> GetAll();
         Task<Category?> GetByIdAsync(Guid id);
         Task<Category?> GetByNameAsync(string name);
 

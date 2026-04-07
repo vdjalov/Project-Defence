@@ -7,7 +7,7 @@ namespace ClercSystem.Infrastructure.Interfaces
 {
     public interface IDepartmentRepository
     {
-        Task<List<Department>> GetAllAsync();
+        IQueryable<Department> GetAll();
         Task<Department?> GetByIdAsync(Guid id);
         Task<Department?> GetByNameAsync(string name);
 
