@@ -288,10 +288,5 @@ namespace ClercSystem.Controllers
            return RedirectToAction(nameof(Index));
         }
 
-
-     
-
-        
-
     }
 }

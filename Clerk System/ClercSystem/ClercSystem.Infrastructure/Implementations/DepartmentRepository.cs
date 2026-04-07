@@ -41,7 +41,7 @@ namespace ClercSystem.Infrastructure.Implementations
 
         public async Task<bool> UpdateAndSaveAsync(Department department)
         {
-            Department? existingDepartment = this.GetByIdAsync(department.DepartmentId).Result;
+            Department? existingDepartment = await this.GetByIdAsync(department.DepartmentId);
 
             if (existingDepartment == null)
             {

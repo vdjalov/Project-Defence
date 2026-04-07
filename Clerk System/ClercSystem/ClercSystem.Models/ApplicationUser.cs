@@ -16,7 +16,7 @@ namespace ClercSystem.Data.Models
 
         public Guid? DepartmentId { get; set; }
 
-        // shows whitch department the employee belongs to not initialy input after registration the superadmin decides
+        // shows whitch department the employee belongs to not initialy input after registration the admin decides
         [ForeignKey(nameof(DepartmentId))]
         public Department Department { get; set; }
 

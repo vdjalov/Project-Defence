@@ -1,12 +1,74 @@
-﻿using ClercSystem.Infrastructure.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ClercSystem.Data;
+using ClercSystem.Data.Models;
+using ClercSystem.Infrastructure.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Infrastructure.Implementations
 {
     public class DocumentRepository : IDocumentRepository
     {
 
+        private readonly AppDbContext context;
+
+        public DocumentRepository(AppDbContext _context)
+        {
+            this.context = _context;
+        }
+
+        public async Task AddAndSaveAsync(Document document)
+        {
+            await this.context.Documents.AddAsync(document);
+            await this.context.SaveChangesAsync();
+        }
+
+        public async Task<bool> DeleteAndSaveAsync(Document document)
+        {
+            Document? existingDocument = await this.GetByIdAsync(document.Id);
+            if (existingDocument == null)
+            {
+                return false;
+            }
+
+            this.context.Documents.Remove(document);
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+       
+        public async Task<List<Document>> GetAllAsync()
+        {
+            return await this.context.Documents.ToListAsync();
+        }
+
+        public async Task<Document?> GetByIdAsync(Guid id)
+        {
+            return await this.context.Documents.FindAsync(id);
+        }
+
+        public async Task<Document?> GetByTitleAsync(string title)
+        {
+            return await this.context.Documents
+                .FirstOrDefaultAsync(d => d.Title == title);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await this.context.SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateAndSaveAsync(Document document)
+        {
+            Document? existingDocument = await this.GetByIdAsync(document.Id);
+
+            if (existingDocument == null)
+            {
+                return false;
+            }
+
+            this.context.Documents.Update(document);
+            await this.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
