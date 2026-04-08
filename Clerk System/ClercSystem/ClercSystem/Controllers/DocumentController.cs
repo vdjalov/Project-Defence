@@ -31,7 +31,7 @@ namespace ClercSystem.Controllers
             ViewBag.Search = search;
             ViewBag.CurrentPage = page;
             ViewBag.PageSize = pageSize;
-            ViewBag.totalPages = (int)Math.Ceiling((double)result.TotalCount / pageSize);
+            ViewBag.TotalPages = (int)Math.Ceiling((double)result.TotalCount / pageSize);
 
             return View(result.Docs);
         }

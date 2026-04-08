@@ -106,20 +106,19 @@ namespace ClercSystem.Services.Implementations
 
             if (!string.IsNullOrEmpty(search))
             {
-                search = search.Trim();
+                search = search.Trim().ToLower();
                 allDocuments = allDocuments
-                    .Where(d => (!d.IsDeleted)
-                        && (d.Title.Contains(search, StringComparison.OrdinalIgnoreCase)
-                        || d.Department.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
-                        || d.CreatedBy.UserName.Contains(search, StringComparison.OrdinalIgnoreCase)
-                        || d.Category.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase))
+                    .Where(d => d.Title.ToLower().Contains(search)
+                        || d.Department.Name.ToLower().Contains(search)
+                        || d.CreatedBy.UserName.ToLower().Contains(search)
+                        || d.Category.CategoryName.ToLower().Contains(search)
                         );
             }
 
             int totalDocuments = await allDocuments.CountAsync(); // total items in pagination
 
             List<AllDocumentsViewModel> documents = await allDocuments
-                .Where(d => !d.IsDeleted)
+                //.Where(d => !d.IsDeleted)  // already filtered 
                 .Select(d => new AllDocumentsViewModel
                 {
                     Id = d.Id,
