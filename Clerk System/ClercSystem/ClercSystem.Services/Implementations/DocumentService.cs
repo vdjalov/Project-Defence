@@ -101,18 +101,18 @@ namespace ClercSystem.Services.Implementations
         // this method is used to get all documents with pagination and search functionality
         public async Task<(IEnumerable<AllDocumentsViewModel> Docs, int TotalCount)> GetAllDocumentsAsync(string search, int page, int pageSize)
         {
-            IQueryable<Document> allDocuments =  this.documentRepository.GetAll();
+            IQueryable<Document> allDocuments =  this.documentRepository.GetAll().Where(d => !d.IsDeleted);
          
 
             if (!string.IsNullOrEmpty(search))
             {
                 search = search.Trim();
                 allDocuments = allDocuments
-                    .Where(d => !d.IsDeleted
-                        || d.Title.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    .Where(d => (!d.IsDeleted)
+                        && (d.Title.Contains(search, StringComparison.OrdinalIgnoreCase)
                         || d.Department.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
                         || d.CreatedBy.UserName.Contains(search, StringComparison.OrdinalIgnoreCase)
-                        || d.Category.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                        || d.Category.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase))
                         );
             }
 

@@ -30,6 +30,7 @@ namespace ClercSystem
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IDocumentService, DocumentService>();
+            builder.Services.AddScoped<IMyDocumentUserService, MyDocumentUserService>();
 
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>

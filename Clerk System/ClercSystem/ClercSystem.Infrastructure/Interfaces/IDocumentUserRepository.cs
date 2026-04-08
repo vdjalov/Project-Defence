@@ -13,7 +13,6 @@ namespace ClercSystem.Infrastructure.Interfaces
         Task<DocumentUser?> GetByIdAsync(Guid userId, Guid documentId);
         Task<bool> UpdateAndSaveAsync(DocumentUser documentUser);
         Task<bool> DeleteAndSaveAsync(DocumentUser documentUser);
-        Task<bool> SoftDeleteAsync(Guid documentId, Guid userId);
         Task SaveChangesAsync();
 
 

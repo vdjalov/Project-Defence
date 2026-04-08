@@ -23,10 +23,10 @@ namespace ClercSystem.Controllers
         }
 
         [HttpGet] 
-        public async Task<IActionResult> Index(string search, int page, int pageSize) // view all documents with pagination and search functionality
+        public async Task<IActionResult> Index(string search, int page = 1, int pageSize = 5) // view all documents with pagination and search functionality
         {
 
-            var result = await documentService.GetAllDocumentsAsync(search, page = 1, pageSize = 5);
+            var result = await documentService.GetAllDocumentsAsync(search, page, pageSize);
 
             ViewBag.Search = search;
             ViewBag.CurrentPage = page;

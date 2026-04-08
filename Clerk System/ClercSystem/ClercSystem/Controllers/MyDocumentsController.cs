@@ -1,4 +1,5 @@
 ﻿using ClercSystem.Data;
+using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.MyDocuments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,29 +11,19 @@ namespace ClercSystem.Controllers
     public class MyDocumentsController : BaseController
     {
         private readonly AppDbContext context;
+        private readonly IMyDocumentUserService myDocumentService;
 
-        public MyDocumentsController(AppDbContext context_)
+        public MyDocumentsController(AppDbContext context_, IMyDocumentUserService _myDocumentService)
         {
             this.context = context_;    
+            this.myDocumentService = _myDocumentService;
         }
 
         public async Task<IActionResult> Index()
         {
-            Guid id = base.GetUserIdAsGuid();
 
-             List<MyDocumentsViewModel> documents = await this.context.Documents
-                //.Include(d => d.Department)
-                //.Include(d => d.CreatedBy)
-                //.Include(d => d.Category)
-                .Where(d => !d.IsDeleted && d.CreatedById == id)
-                .Select(d => new MyDocumentsViewModel
-                {
-                    Id = d.Id,
-                    Title = d.Title,
-                    DepartmentName = d.Department.Name,
-                    Createdby = d.CreatedBy.UserName,
-                    CategoryName = d.Category.CategoryName
-                }).ToListAsync();
+            Guid id = base.GetUserIdAsGuid();
+            List<MyDocumentsViewModel> documents = await this.myDocumentService.GetMyDocumentsAsync(id);
 
             return View(documents);
             

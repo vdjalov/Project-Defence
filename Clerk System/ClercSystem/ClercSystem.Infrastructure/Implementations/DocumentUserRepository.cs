@@ -57,7 +57,8 @@ namespace ClercSystem.Infrastructure.Implementations
             await this.context.SaveChangesAsync();
         }
 
-       
+        
+
         public async Task<bool> UpdateAndSaveAsync(DocumentUser documentUser)
         {
             DocumentUser? existingDocumentUser = 
