@@ -1,9 +1,11 @@
 ﻿@using ClercSystem.ViewModels.MyDocuments;
 @model IEnumerable<MyDocumentsViewModel>;
-@if (TempData["ErrorMessage"] != null)
+
+
+@if (TempData["Message"] != null)
 {
     <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
+        @TempData["Message"]
     </div>
 }
 

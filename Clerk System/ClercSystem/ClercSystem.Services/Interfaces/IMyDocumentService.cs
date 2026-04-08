@@ -7,5 +7,6 @@ namespace ClercSystem.Services.Interfaces
     public interface IMyDocumentService
     {
 
+
     }
 }

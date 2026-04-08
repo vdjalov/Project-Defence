@@ -29,7 +29,7 @@ namespace ClercSystem.Infrastructure.Implementations
                 return false;
             }
 
-            this.context.Documents.Remove(document);
+            this.context.Documents.Remove(existingDocument);
             await this.context.SaveChangesAsync();
             return true;
         }
