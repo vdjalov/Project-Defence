@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ClercSystem.Data
+namespace ClercSystem.Data.Seeder
 {
     public static class AppDbSeeder
     {

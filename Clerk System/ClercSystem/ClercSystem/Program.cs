@@ -1,5 +1,6 @@
 using ClercSystem.Data;
 using ClercSystem.Data.Models;
+using ClercSystem.Data.Seeder;
 using ClercSystem.Infrastructure.Implementations;
 using ClercSystem.Infrastructure.Interfaces;
 using ClercSystem.Services.Implementations;
@@ -73,6 +74,8 @@ namespace ClercSystem
                 await AppDbSeeder.SeedCategoriesAsync(services); // seed categories
             }
 
+            
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -93,6 +96,12 @@ namespace ClercSystem
             app.MapControllers();
 
             app.MapStaticAssets();
+
+            // For the admin area routing code
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")

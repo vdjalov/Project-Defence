@@ -1,12 +1,8 @@
 ﻿using ClercSystem.Data;
-using ClercSystem.Data.Models;
 using ClercSystem.Services.Interfaces;
-using ClercSystem.ViewModels.Category;
-using ClercSystem.ViewModels.Department;
 using ClercSystem.ViewModels.Document;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Controllers
 {
