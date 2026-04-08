@@ -21,6 +21,7 @@ namespace ClercSystem.Areas.Admin.Controllers
             this.roleManager = _roleManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var users = userManager.Users.ToList();
@@ -34,7 +35,8 @@ namespace ClercSystem.Areas.Admin.Controllers
                     Id = user.Id,
                     FirstName = user.FirstName, 
                     LastName = user.LastName,
-
+                    DepartmentId = user.DepartmentId,
+                    IsManager = user.IsManager,
                     Email = user.Email,
                     Roles = roles.ToList()
                 });

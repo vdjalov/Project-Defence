@@ -12,7 +12,7 @@ namespace ClercSystem.Data.Seeder
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
-            string[] roleNames = { "Admin", "User", "Manager" };
+            string[] roleNames = { "Admin", "User", "Observer" };
 
             foreach (var roleName in roleNames)
             {

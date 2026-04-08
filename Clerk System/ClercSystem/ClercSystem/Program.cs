@@ -72,6 +72,7 @@ namespace ClercSystem
                 var services = scope.ServiceProvider;
                 await AppDbSeeder.SeedDepartmentsAsync(services); // seed departments
                 await AppDbSeeder.SeedCategoriesAsync(services); // seed categories
+                RolesSeeder.SeedRoles(services);
             }
 
             
@@ -90,6 +91,21 @@ namespace ClercSystem
             app.UseRouting();
 
             app.UseAuthentication();
+
+            app.Use((context, next) =>
+            {
+
+                if (context.User.Identity?.IsAuthenticated == true && context.Request.Path == "/") // If the user is authenticated and trying to access the root URL
+                {
+                    if (context.User.IsInRole("Admin"))
+                    {
+                        context.Response.Redirect("/Admin/UserManagement/Index");
+                        return Task.CompletedTask;
+                    }
+                }
+                return next();
+            });
+
             app.UseAuthorization();
 
             app.MapRazorPages();
@@ -100,7 +116,7 @@ namespace ClercSystem
             // For the admin area routing code
             app.MapControllerRoute(
                 name: "areas",
-                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area:exists}/{controller=UserManagement}/{action=Index}/{id?}");
                 
             app.MapControllerRoute(
                 name: "default",
