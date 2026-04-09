@@ -1,0 +1,64 @@
+﻿using ClercSystem.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ClercSystem.Data.Seeder
+{
+    public static class UsersSeeder
+    {
+       
+
+        public static async Task SeedAdminDefaultUsersAsync(IServiceProvider serviceProvider, Guid departmentId)
+        {
+
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+           
+
+            //Check if admin user exists
+            var adminEmail = "admin@example.com";
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+            if (adminUser != null)
+            {
+                return; // Admin user already exists, no need to create
+            }
+
+            var adminRoleExists = await roleManager.RoleExistsAsync("Admin");
+            if (!adminRoleExists)
+            {
+                await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
+            }
+
+            ApplicationUser user = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                FirstName = "Admin",
+                LastName = "User",
+                IsManager = true,
+                DepartmentId = departmentId
+            };
+
+            var result = await userManager.CreateAsync(user, "Admin@123");
+
+            if(result.Succeeded)
+            {
+                var userRoleAdded = await userManager.AddToRoleAsync(user, "Admin");
+                if(userRoleAdded.Succeeded)
+                {
+                    Console.WriteLine("Admin user created successfully with Admin role.");
+                }
+                else
+                {
+                    Console.WriteLine("Admin user created but failed to assign Admin role.");
+                }
+            }
+
+
+        }
+    }
+}

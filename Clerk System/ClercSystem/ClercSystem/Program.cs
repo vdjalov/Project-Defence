@@ -73,6 +73,19 @@ namespace ClercSystem
                 await AppDbSeeder.SeedDepartmentsAsync(services); // seed departments
                 await AppDbSeeder.SeedCategoriesAsync(services); // seed categories
                 RolesSeeder.SeedRoles(services);
+
+                var departmentServie = services.GetRequiredService<IDepartmentService>();
+                bool doesDepartmentExist = await departmentServie.DepartmentExistsAsync("Management", "Sofia");
+               
+                if(doesDepartmentExist)
+                {
+                    Guid departmentId = (await departmentServie.GetAllDepartmentsAsync())
+                        .FirstOrDefault(d => d.Name == "Management" && d.Location == "Sofia").DepartmentId;
+
+                    await UsersSeeder.SeedAdminDefaultUsersAsync(services, departmentId); // seed admin user
+                }
+               
+               
             }
 
             
