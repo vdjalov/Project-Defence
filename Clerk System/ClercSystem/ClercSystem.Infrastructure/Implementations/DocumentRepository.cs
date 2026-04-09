@@ -1,6 +1,7 @@
 ﻿using ClercSystem.Data;
 using ClercSystem.Data.Models;
 using ClercSystem.Infrastructure.Interfaces;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Infrastructure.Implementations
