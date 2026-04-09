@@ -30,7 +30,16 @@
                     <td>@user.Email</td>
                     <td>@user.FirstName</td>
                     <td>@user.LastName</td>
-                    <td>@user.IsManager</td>
+                    <td>
+                        <form method="post" asp-action="AssignManager" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
+                            <input type="hidden" name="userId" asp-for="@user.Id"/>
+                            <select asp-for="@user.IsManager" name="IsManager" class="form-select d-inline w-auto">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">Assign Manager</button>
+                        </form>
+                    </td>
                     <td>@user.DepartmentId</td>
                     <td>
                         @foreach (var role in user.Roles)

@@ -14,7 +14,7 @@ namespace ClercSystem.Areas.Admin.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole<Guid>> roleManager;
 
-        public UserManagementController(UserManager<ApplicationUser> _userManager, 
+        public UserManagementController(UserManager<ApplicationUser> _userManager,
                                         RoleManager<IdentityRole<Guid>> _roleManager)
         {
             this.userManager = _userManager;
@@ -33,10 +33,10 @@ namespace ClercSystem.Areas.Admin.Controllers
                 userViewModels.Add(new UserViewModel
                 {
                     Id = user.Id,
-                    FirstName = user.FirstName, 
+                    FirstName = user.FirstName,
                     LastName = user.LastName,
                     DepartmentId = user.DepartmentId,
-                    IsManager = user.IsManager,
+                    IsManager = user.IsManager ? "true" : "false",
                     Email = user.Email,
                     Roles = roles.ToList()
                 });
@@ -140,6 +140,43 @@ namespace ClercSystem.Areas.Admin.Controllers
 
             TempData["Message"] = "An error occurred while trying to delete the user. Please try again.";
             return BadRequest(result.Errors);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignManager(string userId, string IsManager) // assign manager position to user
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null || string.IsNullOrEmpty(IsManager)) // User not found or manager property is empty error handling
+            {
+                TempData["Message"] = "User not found or manager property is empty. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
+
+
+            var userIsLockedOut = await userManager.IsLockedOutAsync(user);
+            if (userIsLockedOut)
+            {
+                TempData["Message"] = "Cannot assign manager position to a locked out user. Please unlock the user before assigning roles.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (IsManager == "yes".ToLower())
+            {
+                user.IsManager = true;
+            }
+            user.IsManager = false;
+            var result = await userManager.UpdateAsync(user);
+
+
+            if (result.Succeeded)
+            {
+                TempData["Message"] = "User manager status has been updated successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["Message"] = "An error occurred while trying to update the user's manager status. Please try again.";
+            return BadRequest(result.Errors);
+
         }
 
     }

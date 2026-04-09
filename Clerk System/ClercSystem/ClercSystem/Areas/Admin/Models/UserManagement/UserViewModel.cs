@@ -10,7 +10,7 @@ namespace ClercSystem.Areas.Admin.Models.UserManagement
 
         public string LastName { get; set; } = null!;
 
-        public bool IsManager { get; set; } = false;
+        public string? IsManager { get; set; }
 
         public string Email { get; set; } = string.Empty;
 
