@@ -35,7 +35,7 @@ namespace ClercSystem.Areas.Admin.Controllers
                     Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    DepartmentId = user.DepartmentId,
+                    Departments = user.DepartmentId,
                     IsManager = user.IsManager ? "true" : "false",
                     Email = user.Email,
                     Roles = roles.ToList()
@@ -152,21 +152,37 @@ namespace ClercSystem.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var userRoles = await userManager.GetRolesAsync(user);
+            if (userRoles.Any(r => r.Equals("Admin", StringComparison.OrdinalIgnoreCase))) // cant change if user has admin role
+            {                                                                           // admin user has full rights
+                TempData["Message"] = "Cant change on admin user";
+                return RedirectToAction(nameof(Index));
+            }
 
-            var userIsLockedOut = await userManager.IsLockedOutAsync(user);
+            var userIsLockedOut = await userManager.IsLockedOutAsync(user); // cant change manager status if user is locked out
             if (userIsLockedOut)
             {
                 TempData["Message"] = "Cannot assign manager position to a locked out user. Please unlock the user before assigning roles.";
                 return RedirectToAction(nameof(Index));
             }
 
-            if (IsManager == "yes".ToLower())
+            bool currentManagerStatus = user.IsManager;
+
+            if(currentManagerStatus.ToString().ToLower() == IsManager.ToLower()) // Check if the current manager status is the
+                                                                                 // same as the new value to avoid unnecessary updates
+            {
+                TempData["Message"] = "The user's manager status is already set to the specified value. No changes were made.";
+                return RedirectToAction(nameof(Index));
+            }
+
+
+
+            if (IsManager == "true".ToLower())
             {
                 user.IsManager = true;
             }
-            user.IsManager = false;
+         
             var result = await userManager.UpdateAsync(user);
-
 
             if (result.Succeeded)
             {
