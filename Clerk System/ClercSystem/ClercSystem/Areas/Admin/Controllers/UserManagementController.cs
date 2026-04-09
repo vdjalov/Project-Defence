@@ -1,5 +1,6 @@
 ﻿using ClercSystem.Areas.Admin.Models.UserManagement;
 using ClercSystem.Data.Models;
+using ClercSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,15 @@ namespace ClercSystem.Areas.Admin.Controllers
 
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole<Guid>> roleManager;
+        private readonly IDepartmentService departmentService;
 
         public UserManagementController(UserManager<ApplicationUser> _userManager,
-                                        RoleManager<IdentityRole<Guid>> _roleManager)
+                                        RoleManager<IdentityRole<Guid>> _roleManager,
+                                        IDepartmentService _departmentService)
         {
             this.userManager = _userManager;
             this.roleManager = _roleManager;
+            this.departmentService = _departmentService;
         }
 
         [HttpGet]
@@ -35,7 +39,8 @@ namespace ClercSystem.Areas.Admin.Controllers
                     Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Departments = user.DepartmentId,
+                    DepartmentId = user.DepartmentId.ToString(),
+                    Departments = await this.departmentService.GetAllDepartmentsAsync(),
                     IsManager = user.IsManager ? "true" : "false",
                     Email = user.Email,
                     Roles = roles.ToList()
@@ -145,6 +150,13 @@ namespace ClercSystem.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AssignManager(string userId, string IsManager) // assign manager position to user
         {
+            bool isvalidGuidUser = Guid.TryParse(userId, out Guid parsedUserId);
+            if (!isvalidGuidUser) // Invalid GUID format error handling
+            {
+                TempData["Message"] = "Invalid user ID. Please provide valid GUID.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var user = await userManager.FindByIdAsync(userId);
             if (user == null || string.IsNullOrEmpty(IsManager)) // User not found or manager property is empty error handling
             {
@@ -191,6 +203,65 @@ namespace ClercSystem.Areas.Admin.Controllers
             }
 
             TempData["Message"] = "An error occurred while trying to update the user's manager status. Please try again.";
+            return BadRequest(result.Errors);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignDepartment(string userId, string departmentId) // assign department to user
+        {
+            bool isvalidGuidUser = Guid.TryParse(userId, out Guid parsedUserId);
+            bool isValidGuidDepartment = Guid.TryParse(departmentId, out Guid parsedDepartmentId);
+
+            if(!isvalidGuidUser || !isValidGuidDepartment) // Invalid GUID format error handling
+            {
+                TempData["Message"] = "Invalid user ID or department ID format. Please provide valid GUIDs.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null || string.IsNullOrWhiteSpace(departmentId)) // User not found error handling
+            {
+                TempData["Message"] = "User not found. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool doesDepartmentExist = await departmentService.DepartmentExistsByIdAsync(Guid.Parse(departmentId));
+            if(!doesDepartmentExist) // Department not found error handling
+            {
+                TempData["Message"] = "Department not found. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var userRoles = await userManager.GetRolesAsync(user);
+            if (userRoles.Any(r => r.Equals("Admin", StringComparison.OrdinalIgnoreCase))) // cant change if user has admin role
+            {                                                                           // admin user has full rights
+                TempData["Message"] = "Cant change on admin user";
+                return RedirectToAction(nameof(Index));
+            }
+            var userIsLockedOut = await userManager.IsLockedOutAsync(user); // cant change department if user is locked out
+            if (userIsLockedOut)
+            {
+                TempData["Message"] = "Cannot assign department to a locked out user. Please unlock the user before assigning roles.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            Guid? currentDepartmentId = user.DepartmentId;
+            if (currentDepartmentId.HasValue && currentDepartmentId.Value.ToString() == departmentId) // Check if the current department is the same as the new value to avoid unnecessary updates
+            {
+                TempData["Message"] = "The user's department is already set to the specified value. No changes were made.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            user.DepartmentId = Guid.Parse(departmentId);
+            var result = await userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                TempData["Message"] = "User department has been updated successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+            TempData["Message"] = "An error occurred while trying to update the user's department. Please try again.";
             return BadRequest(result.Errors);
 
         }

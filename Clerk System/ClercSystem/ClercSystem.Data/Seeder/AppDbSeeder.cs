@@ -14,6 +14,7 @@ namespace ClercSystem.Data.Seeder
             if (! await context.Departments.AnyAsync())
             {
                 context.Departments.AddRange(
+                    new Department { Name = "Management", Location = "Sofia" },
                     new Department {  Name = "Human Resources" , Location="Plovdiv" },
                     new Department {  Name = "IT", Location = "Varna" }, 
                     new Department {  Name = "Finance", Location= "Sofia" },

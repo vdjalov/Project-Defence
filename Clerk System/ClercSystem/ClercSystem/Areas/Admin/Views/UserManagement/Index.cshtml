@@ -40,7 +40,25 @@
                             <button type="submit" class="btn btn-primary btn-sm">Assign Manager</button>
                         </form>
                     </td>
-                    <td>Department</td>
+                    <td>
+                        <form method="post" asp-action="AssignDepartment" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
+                            <input type="hidden" name="userId" asp-for="@user.Id" />
+                            <select name="DepartmentId" asp-for="@user.DepartmentId" class="form-select d-inline w-auto">
+                                @if(string.IsNullOrWhiteSpace(user.DepartmentId))
+                                    {
+                                    <option value="">Select Department</option>
+                                    }
+                                    
+                                @foreach (var department in user.Departments)
+                                {
+                                    <option value="@department.DepartmentId">@department.Name</option>
+                                }
+                                
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">Assign Department</button>
+                        </form>
+
+                    </td>
                     <td>
                         @foreach (var role in user.Roles)
                         {

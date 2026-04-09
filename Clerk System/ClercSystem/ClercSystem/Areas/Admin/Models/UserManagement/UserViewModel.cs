@@ -1,5 +1,4 @@
-﻿using ClercSystem.Data.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using ClercSystem.ViewModels.Department;
 
 namespace ClercSystem.Areas.Admin.Models.UserManagement
 {
@@ -15,7 +14,8 @@ namespace ClercSystem.Areas.Admin.Models.UserManagement
 
         public string Email { get; set; } = string.Empty;
 
-        public List<Department> Departments{ get; set; } = new List<Department>();
+        public string? DepartmentId { get; set; }
+        public List<AllDepartmentsViewModel> Departments{ get; set; } = new List<AllDepartmentsViewModel>();
 
         public List<string> Roles { get; set; } = new List<string>();
 
