@@ -101,8 +101,11 @@ namespace ClercSystem.Controllers
             //only the creator of the document can edit it ?????
             if (!checkIfDocumentCreatorIsValidOrDocumentExists)
             {
-                TempData["Message"] = "You do not have sufficient rights to work on this document or it does not exist.";
-                return RedirectToAction(nameof(Index));
+                if (!User.IsInRole("Admin"))
+                {
+                    TempData["Message"] = "You do not have sufficient rights to work on this document or it does not exist.";
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             EditDocumentViewModel editDocumentViewModel = await this.documentService.GetEditModelAsync(Guid.Parse(id));
@@ -142,8 +145,11 @@ namespace ClercSystem.Controllers
             //only the creator of the document can edit it ?????
             if (!checkIfDocumentCreatorIsValidOrDocumentExists)
             {
-                TempData["Message"] = "You do not have sufficient rights to work on this document or it does not exist.";
-                return RedirectToAction(nameof(Index));
+                if(!User.IsInRole("Admin"))
+                {
+                    TempData["Message"] = "You do not have sufficient rights to work on this document or it does not exist.";
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
 
