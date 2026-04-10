@@ -8,7 +8,7 @@ namespace ClercSystem.Data.Seeder
 {
     public static class RolesSeeder
     {
-        public static void SeedRoles(IServiceProvider serviceProvider)
+        public static async Task SeedRolesAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
@@ -16,10 +16,10 @@ namespace ClercSystem.Data.Seeder
 
             foreach (var roleName in roleNames)
             {
-                var roleExists = roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult();
+                var roleExists = await roleManager.RoleExistsAsync(roleName);
                 if (!roleExists)
                 {
-                    IdentityResult result = roleManager.CreateAsync(new IdentityRole<Guid> { Name = roleName }).GetAwaiter().GetResult();
+                    IdentityResult result = await roleManager.CreateAsync(new IdentityRole<Guid> { Name = roleName });
                     if (!result.Succeeded)
                     {
                         throw new Exception($"Failed to create role: {roleName}");

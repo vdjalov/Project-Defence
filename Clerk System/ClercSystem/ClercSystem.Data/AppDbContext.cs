@@ -16,9 +16,12 @@ namespace ClercSystem.Data
         public DbSet<DocumentLog> DocumentLogs { get; set; }
         public DbSet<DocumentUser> DocumentsUsers { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+             
+            modelBuilder.Entity<Document>().HasQueryFilter(d => !d.IsDeleted); // Global query filter to exclude soft-deleted documents
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -22,9 +22,26 @@ namespace ClercSystem.Data.Seeder
             var adminEmail = "admin@example.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
-            if (adminUser != null)
+            if (adminUser != null) // Admin user already exists, ensure it has the Admin role
             {
-                return; // Admin user already exists, no need to create
+                var roleExists = await roleManager.RoleExistsAsync("Admin");
+
+                if (!roleExists)
+                {
+                    await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
+                }
+
+                var userRoleAdded = await userManager.AddToRoleAsync(adminUser, "Admin");
+                if (userRoleAdded.Succeeded) // Ensure the user has the Admin role
+                {
+                    Console.WriteLine("Admin user created successfully with Admin role.");
+                }
+                else
+                {
+                    Console.WriteLine("Admin user created but failed to assign Admin role.");
+                }
+
+                return;
             }
 
             var adminRoleExists = await roleManager.RoleExistsAsync("Admin");

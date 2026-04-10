@@ -72,7 +72,7 @@ namespace ClercSystem
                 var services = scope.ServiceProvider;
                 await AppDbSeeder.SeedDepartmentsAsync(services); // seed departments
                 await AppDbSeeder.SeedCategoriesAsync(services); // seed categories
-                RolesSeeder.SeedRoles(services);
+                await RolesSeeder.SeedRolesAsync(services);
 
                 var departmentServie = services.GetRequiredService<IDepartmentService>();
                 bool doesDepartmentExist = await departmentServie.DepartmentExistsAsync("Management", "Sofia");

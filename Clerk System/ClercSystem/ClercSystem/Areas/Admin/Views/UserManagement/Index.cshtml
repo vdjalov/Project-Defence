@@ -20,7 +20,10 @@
                 <th>IsManager</th>
                 <th>DepartmentId</th>
                 <th>Roles</th>
-                <th>Actions</th>
+                <th>Assign Role</th>
+                <th>Remove Role</th>
+                <th>Delete User</th>
+
             </tr>
         </thead>
         <tbody>
@@ -76,6 +79,9 @@
                             <button type="submit" class="btn btn-primary btn-sm">Assign Role</button>
                         </form>
 
+                       
+                    </td>
+                    <td>
                         <form method="post" asp-action="RemoveRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline ms-2">
                             <input type="hidden" name="userId" value="@user.Id" />
                             <select name="role" class="form-select d-inline w-auto">
@@ -86,7 +92,8 @@
                             </select>
                             <button type="submit" class="btn btn-warning btn-sm">Remove Role</button>
                         </form>
-
+                    </td>
+                    <td>
                         <form method="post" asp-action="DeleteUser" asp-controller="UserManagement" asp-area="Admin" class="d-inline ms-2">
                             <input type="hidden" name="userId" value="@user.Id" />
                             <button type="submit" class="btn btn-danger btn-sm">Delete User</button>
