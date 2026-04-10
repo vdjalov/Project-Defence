@@ -7,18 +7,17 @@
         @TempData["ErrorMessage"]
     </div>
 }
-@* @if (User?.Identity?.IsAuthenticated ?? false) // show only if user is logged in
-{ *@
-     <h2>Departments</h2> 
-    @* @if (!string.IsNullOrEmpty(ViewBag.userId) && ViewBag.isUserManager)
-    { *@
-        <div class="d-flex justify-content-end mb-4">
-            <a asp-action="Create" class="btn btn-primary btn-lg">
-                <i class="bi bi-plus-circle"></i> Add New Department
-            </a>
-        </div>
-@*     }
-} *@
+
+ <h2>Departments</h2> 
+   
+ @if (User.IsInRole("Admin"))
+{
+    <div class="d-flex justify-content-end mb-4">
+        <a asp-action="Create" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle"></i> Add New Department
+        </a>
+    </div>
+}
 
 <table class="table table-hover table-bordered">
     <thead class="table-dark">
@@ -38,12 +37,19 @@
                     <a asp-action="More" asp-route-id="@department.DepartmentId" class="btn btn-info btn-sm me-2">
                         <i class="bi bi-calendar-plus"></i> More
                     </a>
-                    <a asp-action="Edit" asp-route-id="@department.DepartmentId" class="btn btn-info btn-sm me-2">
-                        <i class="bi bi-calendar-plus"></i> Edit
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@department.DepartmentId" class="btn btn-info btn-sm me-2">
-                        <i class="bi bi-calendar-plus"></i> Delete
-                    </a>
+                    @if (User.IsInRole("Admin") || User.IsInRole("User"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@department.DepartmentId" class="btn btn-info btn-sm me-2">
+                            <i class="bi bi-calendar-plus"></i> Edit
+                        </a>
+                    }
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Delete" asp-route-id="@department.DepartmentId" class="btn btn-info btn-sm me-2">
+                            <i class="bi bi-calendar-plus"></i> Delete
+                        </a>
+                    }
                 </td>
             </tr>
         }

@@ -9,31 +9,36 @@
     </div>
 }
 
-<h2>Edit Cinema</h2>
+@if (User.IsInRole("Admin") || User.IsInRole("User"))
+{
 
-<form asp-action="Edit" method="post">
-    @Html.AntiForgeryToken() <!-- Adds anti-forgery token for CSRF protection -->
-    <!-- Hidden field for Department ID -->
-    <input type="hidden" asp-for="DepartmentId" />
+    <h2>Edit Department</h2>
 
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken() <!-- Adds anti-forgery token for CSRF protection -->
+        <!-- Hidden field for Department ID -->
+        <input type="hidden" asp-for="DepartmentId" />
 
-    <div class="form-group">
-        <label asp-for="Location" class="control-label"></label>
-        <input asp-for="Location" class="form-control" />
-        <span asp-validation-for="Location" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
 
-    <div class="form-group mt-3">
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a asp-action="Index" class="btn btn-secondary ml-2">Cancel</a>
-    </div>
-</form>
+        <div class="form-group">
+            <label asp-for="Location" class="control-label"></label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
 
-@section Scripts {
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-action="Index" class="btn btn-secondary ml-2">Cancel</a>
+        </div>
+    </form>
+
+    @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    }
+
 }

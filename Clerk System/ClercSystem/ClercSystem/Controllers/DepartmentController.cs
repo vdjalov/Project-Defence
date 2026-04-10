@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClercSystem.Controllers
 {
-    [Authorize]
+    
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentService departmentService;
@@ -17,6 +17,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanRead")]
         public async Task<IActionResult> Index()
         {
             List<AllDepartmentsViewModel> allDepartments = 
@@ -25,7 +26,9 @@ namespace ClercSystem.Controllers
             return View(allDepartments); ;
         }
 
+
         [HttpGet]
+        [Authorize(Policy = "CanCreate")]
         public async Task<IActionResult> Create()
         {
             CreateDepartmentViewModel model = this.departmentService.GetCreateModel();
@@ -33,6 +36,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanCreate")]
         public async Task<IActionResult> Create(CreateDepartmentViewModel model)
         {
             string departmentName = model.Name;
@@ -68,6 +72,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "CanUpdate")]
         public async Task<IActionResult> Edit(string id)
         {
             bool isValidGuid = base.CheckIfGuidIsValid(id);
@@ -93,6 +98,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanUpdate")]
         public async Task<IActionResult> Edit(EditDepartmentViewModel model)
         {
             string departmentName = model.Name;
@@ -141,6 +147,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "CanRead")]
         public async Task<IActionResult> More(string id)
         {
             bool isValidGuid = base.CheckIfGuidIsValid(id);
@@ -166,6 +173,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "CanDelete")]
         public async Task<IActionResult> Delete(string id)
         {
             bool isValidGuid = base.CheckIfGuidIsValid(id);
