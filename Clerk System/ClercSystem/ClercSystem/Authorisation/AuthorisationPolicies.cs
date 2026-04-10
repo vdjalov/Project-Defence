@@ -12,7 +12,7 @@
                     policy.RequireRole("Admin", "User", "Observer"));
 
                 options.AddPolicy("CanCreate", policy =>
-                    policy.RequireRole("Admin", "User"));
+                    policy.RequireRole("Admin"));
 
                 options.AddPolicy("CanUpdate", policy =>
                     policy.RequireRole("Admin", "User"));
