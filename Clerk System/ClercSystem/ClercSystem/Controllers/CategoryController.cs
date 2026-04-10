@@ -9,20 +9,20 @@ using Microsoft.EntityFrameworkCore;
 namespace ClercSystem.Controllers
 {
 
-    [Authorize]
+    
     public class CategoryController : BaseController
     {
-        private readonly AppDbContext context;
+        
         private readonly ICategoryService categoryService;
 
         public CategoryController(AppDbContext _context, ICategoryService _categoryService)
         {
-            this.context = _context;
             this.categoryService = _categoryService;
         }
 
 
         [HttpGet]
+        [Authorize(Policy = "CanRead")]
         public async Task<IActionResult> Index()
         {
             List<AllCategoriesViewModel> categories = 
@@ -33,6 +33,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "CanCreate")]
         public async Task<IActionResult> Create()
         {
             CreateCategoryViewModel model = new CreateCategoryViewModel();
@@ -42,6 +43,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpPost]
+        [Authorize(Policy = "CanCreate")]
         public async Task<IActionResult> Create(CreateCategoryViewModel model)
         {
             
@@ -72,6 +74,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "CanUpdate")]
         public async Task<IActionResult> Edit(string id)
         {
 
@@ -98,6 +101,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpPost]
+        [Authorize(Policy = "CanUpdate")]
         public async Task<IActionResult> Edit(EditCategoryViewModel model)
         {
 
@@ -144,6 +148,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "CanRead")]
         public async Task<IActionResult> More(string id)
         {
 
@@ -170,6 +175,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "CanDelete")]
         public async Task<IActionResult> Delete(string id)
         {
             bool isValidGuid = base.CheckIfGuidIsValid(id);

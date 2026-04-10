@@ -1,3 +1,4 @@
+using ClercSystem.Authorisation;
 using ClercSystem.Data;
 using ClercSystem.Data.Models;
 using ClercSystem.Data.Seeder;
@@ -60,7 +61,11 @@ namespace ClercSystem
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
 
+            // 
             builder.Services.AddRazorPages();
+
+            // Add the custom authorization policies
+            builder.Services.AddAppAuthorization(); 
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -77,15 +82,13 @@ namespace ClercSystem
                 var departmentServie = services.GetRequiredService<IDepartmentService>();
                 bool doesDepartmentExist = await departmentServie.DepartmentExistsAsync("Management", "Sofia");
                
-                if(doesDepartmentExist)
+                if(doesDepartmentExist) // Only seed the admin user if the "Management" department in "Sofia" exists, otherwise skip seeding the admin user to avoid potential issues with missing department reference.
                 {
                     Guid departmentId = (await departmentServie.GetAllDepartmentsAsync())
                         .FirstOrDefault(d => d.Name == "Management" && d.Location == "Sofia").DepartmentId;
 
                     await UsersSeeder.SeedAdminDefaultUsersAsync(services, departmentId); // seed admin user
                 }
-               
-               
             }
 
             
