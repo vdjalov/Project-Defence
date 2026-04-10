@@ -1,73 +1,76 @@
 ﻿@using ClercSystem.ViewModels.Document;
 @model CreateDocumentViewModel;
 
-<h2>Add a New Document</h2>
-
-@if (TempData["Message"] != null)
+@if (User.IsInRole("Admin") || User.IsInRole("User"))
 {
-    <div class="alert alert-danger">
-        @TempData["Message"]
-    </div>
-}
+    <h2>Add a New Document</h2>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Title" class="control-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Message"]
+        </div>
+    }
 
-    <div class="form-group">
-        <label asp-for="FilePath" class="control-label"></label>
-        <input asp-for="FilePath" class="form-control" />
-        <span asp-validation-for="FilePath" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="CreatedOn" class="control-label"></label>
-        <input asp-for="CreatedOn" class="form-control"  type="datetime" disabled/>
-        <span asp-validation-for="CreatedOn" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="TimeToAnswer" class="control-label"></label>
-        <input asp-for="TimeToAnswer" class="form-control" type="datetime" />
-        <span asp-validation-for="TimeToAnswer" class="text-danger"></span>
-    </div>
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="FilePath" class="control-label"></label>
+            <input asp-for="FilePath" class="form-control" />
+            <span asp-validation-for="FilePath" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreatedOn" class="control-label"></label>
+            <input asp-for="CreatedOn" class="form-control"  type="datetime" disabled/>
+            <span asp-validation-for="CreatedOn" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="TimeToAnswer" class="control-label"></label>
+            <input asp-for="TimeToAnswer" class="form-control" type="datetime" />
+            <span asp-validation-for="TimeToAnswer" class="text-danger"></span>
+        </div>
     
-    <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
-        <textarea asp-for="Description" class="form-control"> </textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <textarea asp-for="Description" class="form-control"> </textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-       <label asp-for="DepartmentId" class="control-label"></label>
-       <select asp-for="DepartmentId" class="form-select">
-            @foreach (var department in Model.Departments)
-            {
-                <option value="@department.DepartmentId">@department.Name</option>
+        <div class="form-group">
+           <label asp-for="DepartmentId" class="control-label"></label>
+           <select asp-for="DepartmentId" class="form-select">
+                @foreach (var department in Model.Departments)
+                {
+                    <option value="@department.DepartmentId">@department.Name</option>
                 
-            }
-        </select>
-    </div>
+                }
+            </select>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="CategoryId" class="control-label"></label>
-        <select asp-for="CategoryId" class="form-select">
-            @foreach (var category in Model.Categories)
-            {
-                <option value="@category.Id">@category.CategoryName</option>
-            }
-        </select>
-    </div>
+        <div class="form-group">
+            <label asp-for="CategoryId" class="control-label"></label>
+            <select asp-for="CategoryId" class="form-select">
+                @foreach (var category in Model.Categories)
+                {
+                    <option value="@category.Id">@category.CategoryName</option>
+                }
+            </select>
+        </div>
 
-    <div class="form-group mt-3">
-        <button type="submit" class="btn btn-primary">Add Document</button>
-        <a asp-action="Index" class="btn btn-secondary ml-2">Back to List Of Departments</a>
-    </div>
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Add Document</button>
+            <a asp-action="Index" class="btn btn-secondary ml-2">Back to List Of Departments</a>
+        </div>
 
 
-</form>
+    </form>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
 }

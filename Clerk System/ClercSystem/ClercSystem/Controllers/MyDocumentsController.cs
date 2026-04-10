@@ -7,18 +7,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Controllers
 {
-    [Authorize]
+    
     public class MyDocumentsController : BaseController
     {
-        private readonly AppDbContext context;
+        
         private readonly IMyDocumentUserService myDocumentService;
 
         public MyDocumentsController(AppDbContext context_, IMyDocumentUserService _myDocumentService)
         {
-            this.context = context_;    
             this.myDocumentService = _myDocumentService;
         }
-
+        [Authorize(Policy = "CanRead")]
         public async Task<IActionResult> Index()
         {
 

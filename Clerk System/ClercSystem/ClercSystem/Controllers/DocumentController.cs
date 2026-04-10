@@ -9,16 +9,16 @@ namespace ClercSystem.Controllers
     [Authorize]
     public class DocumentController : BaseController
     {
-        private readonly AppDbContext context;
+        
         private readonly IDocumentService documentService;
 
         public DocumentController(AppDbContext _context, IDocumentService _documentService)
         {
-            this.context = _context;
             this.documentService = _documentService;
         }
 
-        [HttpGet] 
+        [HttpGet]
+        [Authorize(Policy = "CanRead")]
         public async Task<IActionResult> Index(string search, int page = 1, int pageSize = 5) // view all documents with pagination and search functionality
         {
 
@@ -33,6 +33,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanUpdate")]
         public async Task<IActionResult> Create()
         {
             CreateDocumentViewModel createDocumentViewModel = await documentService.GetCreateModelAsync();
@@ -41,6 +42,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanUpdate")]
         public async Task<IActionResult> Create(CreateDocumentViewModel model)
         {
             
@@ -80,6 +82,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanUpdate")]
         public async Task<IActionResult> Edit(string id) // edit document get view
         {
             bool isGuidValid = base.CheckIfGuidIsValid(id);
@@ -114,6 +117,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanUpdate")]
         public async Task<IActionResult> Edit(string id, EditDocumentViewModel model)
         {
             bool isGuidValid = base.CheckIfGuidIsValid(id);
@@ -157,6 +161,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "CanRead")]
         public async Task<IActionResult> More(string id) // view more details about a document
         {
             bool isGuidValid = base.CheckIfGuidIsValid(id);
@@ -180,6 +185,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet] // soft deleting a document so that it does not get lost permanently and can be restored if needed
+        [Authorize(Policy = "CanUpdate")]
         public async Task<IActionResult> SoftDelete(string id)
         {
 
