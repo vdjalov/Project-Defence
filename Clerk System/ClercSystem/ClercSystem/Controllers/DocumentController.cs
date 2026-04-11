@@ -161,7 +161,7 @@ namespace ClercSystem.Controllers
 
            if(!documentUpdated)
             {
-                TempData["Message"] = "Document was not updated successfuly. You may not have sufficient rights to work on it.";
+                TempData["Message"] = "Document was not updated successfuly. You rights to edit this document might have been restricted.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -225,11 +225,13 @@ namespace ClercSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            bool documentSoftDeleted = await this.documentService.SoftDeleteAsync(Guid.Parse(id));  
+            bool userIsInRoleAdmin = User.IsInRole("Admin");
+
+            bool documentSoftDeleted = await this.documentService.SoftDeleteAsync(Guid.Parse(id), userIsInRoleAdmin);  
 
             if(documentSoftDeleted == false)
             {
-                TempData["Message"] = "Document was not deleted successfully.";
+                TempData["Message"] = "Document was not deleted successfully. You might not have sufficien rights to do it.";
                 return RedirectToAction(nameof(Index));
             }
 

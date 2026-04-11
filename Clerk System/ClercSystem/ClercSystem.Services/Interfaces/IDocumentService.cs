@@ -16,7 +16,7 @@ namespace ClercSystem.Services.Interfaces
         Task<bool> CheckIfDocumentCreatorIsValid(Guid documentId, Guid userId);
         Task<bool> CheckIfDocumentExists(Guid guid);
         Task<DocumentMoreViewModel?> GetDetailsAsync(Guid id);
-        Task<bool> SoftDeleteAsync(Guid userId);
+        Task<bool> SoftDeleteAsync(Guid userId, bool userIsInRoleAdmin);
 
     }
 }

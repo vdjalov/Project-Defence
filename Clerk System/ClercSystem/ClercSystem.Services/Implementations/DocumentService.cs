@@ -127,7 +127,6 @@ namespace ClercSystem.Services.Implementations
             return hasBeenUpdated;
         }
 
-       
 
         // this method is used to get all documents with pagination and search functionality
         public async Task<(IEnumerable<AllDocumentsViewModel> Docs, int TotalCount)> GetAllDocumentsAsync(string search, int page, int pageSize)
@@ -278,9 +277,38 @@ namespace ClercSystem.Services.Implementations
         }
 
         // this method is used to soft delete a document, only the creator of the document can delete it
-        public Task<bool> SoftDeleteAsync(Guid userId)
+        public async Task<bool> SoftDeleteAsync(Guid documentId, bool userIsInRoleAdmin)
         {
-            return this.documentRepository.SoftDeleteAsync(userId);
+           Document? currentDocument = await this.documentRepository.GetAll().FirstOrDefaultAsync(d => d.Id == documentId);
+
+            if(currentDocument == null)
+            {
+                return false;
+            }
+
+            Guid documentUserId = currentDocument.CreatedById;
+
+            DocumentUser docUser = await this.documentUserRepository.GetByIdAsync(documentUserId, documentId);
+
+            if(docUser == null)
+            {
+                return false;
+            }
+
+            string docPermission = docUser.Permission.ToString();   
+
+            if (userIsInRoleAdmin)
+            {
+               return await this.documentRepository.SoftDeleteAsync(documentId);
+            }
+
+            if(!docPermission.Equals("full", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return false;
+            }
+
+
+            return await this.documentRepository.SoftDeleteAsync(documentId);
         }
     }
 }

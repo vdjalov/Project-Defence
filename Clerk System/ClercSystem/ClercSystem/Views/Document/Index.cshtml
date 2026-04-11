@@ -8,7 +8,7 @@
 
 @if (TempData["Message"] != null)
 {
-    <div class="alert alert-danger">
+    <div class="alert alert-danger temp-alert">
         @TempData["Message"]
     </div>
 }
@@ -145,3 +145,5 @@
 
     </ul>
 </nav>
+
+<script src="~/js/alerts.js"></script>

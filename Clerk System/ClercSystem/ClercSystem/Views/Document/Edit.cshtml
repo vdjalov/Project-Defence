@@ -8,7 +8,7 @@
 
 @if (TempData["Message"] != null)
 {
-    <div class="alert alert-danger">
+    <div class="alert alert-danger temp-alert">
         @TempData["Message"]
     </div>
 }
@@ -66,7 +66,7 @@
             </select>
         </div>
 
-                @if(ViewBag.UserId != ViewBag.CreatorId && User.IsInRole("Admin"))
+                @if(ViewBag.UserId == ViewBag.CreatorId && User.IsInRole("Admin"))
             {
             <div class="form-group">
                 <label asp-for="PermissionType" class="control-label">Permissions</label>
@@ -95,4 +95,6 @@
     @section Scripts {
         <partial name="_ValidationScriptsPartial" />
     }
+
+
 }
