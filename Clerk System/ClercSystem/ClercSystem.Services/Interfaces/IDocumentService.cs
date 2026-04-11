@@ -12,7 +12,7 @@ namespace ClercSystem.Services.Interfaces
         Task<CreateDocumentViewModel> GetCreateModelAsync();
         Task<bool> CreateDocumentAsync(CreateDocumentViewModel model, Guid userId, DateTime date);
         Task<EditDocumentViewModel?> GetEditModelAsync(Guid DocumentId);
-        Task<bool> EditDocumentAsync( Guid userId, EditDocumentViewModel model);
+        Task<bool> EditDocumentAsync( Guid userId, bool isUserInRoleAdmin, EditDocumentViewModel model);
         Task<bool> CheckIfDocumentCreatorIsValid(Guid documentId, Guid userId);
         Task<bool> CheckIfDocumentExists(Guid guid);
         Task<DocumentMoreViewModel?> GetDetailsAsync(Guid id);

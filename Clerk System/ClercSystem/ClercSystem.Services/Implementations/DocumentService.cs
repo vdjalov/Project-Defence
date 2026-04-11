@@ -4,6 +4,7 @@ using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Category;
 using ClercSystem.ViewModels.Department;
 using ClercSystem.ViewModels.Document;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
@@ -81,7 +82,7 @@ namespace ClercSystem.Services.Implementations
         }
 
         // this method is used to edit a document, only the creator of the document can edit it
-        public async Task<bool> EditDocumentAsync(Guid documentId, EditDocumentViewModel model)
+        public async Task<bool> EditDocumentAsync(Guid documentId,bool isUserInRoleAdmin, EditDocumentViewModel model)
         {
 
             Document document = await this.documentRepository.GetByIdAsync(documentId);
@@ -102,11 +103,28 @@ namespace ClercSystem.Services.Implementations
                 return false;
             }
 
-            documentUser.Permission = Enum.Parse<PermissionType>(model.PermissionType);
-            bool hasBeenUpadated = await documentRepository.UpdateAndSaveAsync(document);
-            hasBeenUpadated = await documentUserRepository.UpdateAndSaveAsync(documentUser);
+            bool hasBeenUpdated = false;
 
-            return hasBeenUpadated;
+            if(isUserInRoleAdmin)
+            {
+                documentUser.Permission = Enum.Parse<PermissionType>(model.PermissionType);
+                hasBeenUpdated = await documentRepository.UpdateAndSaveAsync(document);
+                hasBeenUpdated = await documentUserRepository.UpdateAndSaveAsync(documentUser);
+                return hasBeenUpdated;
+            } 
+
+            string editPermission = documentUser.Permission.ToString();
+
+            if(editPermission.Equals("read", StringComparison.CurrentCultureIgnoreCase))
+            {
+                Console.WriteLine("Not Sufficient rights to work on document.");
+                return false;
+            }
+           
+            hasBeenUpdated = await documentRepository.UpdateAndSaveAsync(document);
+            hasBeenUpdated = await documentUserRepository.UpdateAndSaveAsync(documentUser);
+
+            return hasBeenUpdated;
         }
 
        

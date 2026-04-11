@@ -155,13 +155,14 @@ namespace ClercSystem.Controllers
                 }
             }
 
+            bool isUserInRoleAdmin = User.IsInRole("Admin");
 
-            bool documentUpdated = await this.documentService.EditDocumentAsync(Guid.Parse(id), model);
+            bool documentUpdated = await this.documentService.EditDocumentAsync(Guid.Parse(id),isUserInRoleAdmin, model);
 
            if(!documentUpdated)
             {
-                TempData["Message"] = "Document was not updated successfuly.";
-                return View(model);
+                TempData["Message"] = "Document was not updated successfuly. You may not have sufficient rights to work on it.";
+                return RedirectToAction(nameof(Index));
             }
 
             TempData["Message"] = "Document updated successfully!";
