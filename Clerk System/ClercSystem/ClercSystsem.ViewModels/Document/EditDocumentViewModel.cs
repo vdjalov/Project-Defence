@@ -18,6 +18,8 @@ namespace ClercSystem.ViewModels.Document
         [Required]
         public string TimeToAnswer { get; set; } = null!;
 
+        [Required]
+        public string CreatedById { get; set; } = null!;
 
         [Required]
         [MinLength(DescriptionMinLength)]
@@ -30,6 +32,9 @@ namespace ClercSystem.ViewModels.Document
 
         [Required]
         public bool HasBeenAnswered { get; set; } = false;
+
+        [Required]
+        public string PermissionType { get; set; } = null!;
 
         public List<AllDepartmentsViewModel> Departments { get; set; } = new List<AllDepartmentsViewModel>();
 

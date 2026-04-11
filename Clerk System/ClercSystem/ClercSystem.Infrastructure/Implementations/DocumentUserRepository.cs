@@ -14,7 +14,6 @@ namespace ClercSystem.Infrastructure.Implementations
         }
 
 
-
         public async Task AddAndSaveAsync(DocumentUser documentUser)
         {
             await this.context.DocumentsUsers.AddAsync(documentUser);
@@ -42,7 +41,7 @@ namespace ClercSystem.Infrastructure.Implementations
 
         public async Task<DocumentUser?> GetByIdAsync(Guid userId, Guid documentId) // This method retrieves a DocumentUser entry from the database based on the provided userId and documentId.
         {
-            DocumentUser? documentUser = this.context.DocumentsUsers.Find(userId, documentId);
+            DocumentUser? documentUser = this.context.DocumentsUsers.Find(documentId, userId);
 
             if(documentUser == null)
             {
@@ -58,11 +57,11 @@ namespace ClercSystem.Infrastructure.Implementations
         }
 
         
-
+        // 
         public async Task<bool> UpdateAndSaveAsync(DocumentUser documentUser)
         {
             DocumentUser? existingDocumentUser = 
-                await this.context.DocumentsUsers.FindAsync(documentUser.UserId, documentUser.DocumentId);
+                await this.context.DocumentsUsers.FindAsync(documentUser.DocumentId, documentUser.UserId);
 
             if(existingDocumentUser == null)
             {

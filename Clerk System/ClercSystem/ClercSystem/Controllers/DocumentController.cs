@@ -12,7 +12,7 @@ namespace ClercSystem.Controllers
         
         private readonly IDocumentService documentService;
 
-        public DocumentController(AppDbContext _context, IDocumentService _documentService)
+        public DocumentController(IDocumentService _documentService)
         {
             this.documentService = _documentService;
         }
@@ -115,6 +115,9 @@ namespace ClercSystem.Controllers
                 TempData["Message"] = "Document not found!";
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.UserId = userId.ToString();
+            ViewBag.CreatorId = editDocumentViewModel.CreatedById;
            
            return View(editDocumentViewModel);
         }

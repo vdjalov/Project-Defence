@@ -3,7 +3,7 @@
     public enum PermissionType
     {
         Read,
-        Write, 
-        Full, 
+        Write,
+        Full , 
     }
 }

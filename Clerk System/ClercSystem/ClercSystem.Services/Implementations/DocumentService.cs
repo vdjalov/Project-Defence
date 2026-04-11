@@ -5,6 +5,7 @@ using ClercSystem.ViewModels.Category;
 using ClercSystem.ViewModels.Department;
 using ClercSystem.ViewModels.Document;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace ClercSystem.Services.Implementations
 {
@@ -82,6 +83,7 @@ namespace ClercSystem.Services.Implementations
         // this method is used to edit a document, only the creator of the document can edit it
         public async Task<bool> EditDocumentAsync(Guid documentId, EditDocumentViewModel model)
         {
+
             Document document = await this.documentRepository.GetByIdAsync(documentId);
             document.Title = model.Title;
             document.FilePath = model.FilePath;
@@ -91,7 +93,18 @@ namespace ClercSystem.Services.Implementations
             document.CategoryId = Guid.Parse(model.CategoryId);
             document.HasBeenAnswered = model.HasBeenAnswered;
             
+
+            DocumentUser? documentUser = await this.documentUserRepository.GetByIdAsync(document.CreatedById, document.Id);
+
+            if (documentUser == null) // Document permissions not found 
+            {
+                Console.WriteLine("DcoumentUser permissions query not found");
+                return false;
+            }
+
+            documentUser.Permission = Enum.Parse<PermissionType>(model.PermissionType);
             bool hasBeenUpadated = await documentRepository.UpdateAndSaveAsync(document);
+            hasBeenUpadated = await documentUserRepository.UpdateAndSaveAsync(documentUser);
 
             return hasBeenUpadated;
         }
@@ -194,6 +207,7 @@ namespace ClercSystem.Services.Implementations
 
             IQueryable<Department> allDepartments = this.departmentRepository.GetAll();
             IQueryable<Category> allCategories = this.categoryRepository.GetAll();
+            
 
             List<AllDepartmentsViewModel> departments = await allDepartments
                 .Select(d => new AllDepartmentsViewModel
@@ -218,6 +232,14 @@ namespace ClercSystem.Services.Implementations
                 return null;
             }
 
+            DocumentUser? documentUser = await this.documentUserRepository.GetByIdAsync(document.CreatedById, document.Id);
+
+            if(documentUser == null) // Document permissions not found 
+            {
+                Console.WriteLine("DcoumentUser permissions query not found");
+                return null;
+            }
+
             EditDocumentViewModel? editDocumentViewModel = new EditDocumentViewModel()
             {
                 Title = document.Title,
@@ -227,9 +249,12 @@ namespace ClercSystem.Services.Implementations
                 DepartmentId = document.DepartmentId.ToString(),
                 CategoryId = document.CategoryId.ToString(),
                 HasBeenAnswered = document.HasBeenAnswered,
+                PermissionType = documentUser.Permission.ToString(),
+                CreatedById = document.CreatedById.ToString(),
                 Departments = departments,
                 Categories = categories,
             };
+
 
             return editDocumentViewModel;
         }
