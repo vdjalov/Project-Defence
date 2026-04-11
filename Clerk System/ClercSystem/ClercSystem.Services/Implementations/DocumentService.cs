@@ -117,7 +117,7 @@ namespace ClercSystem.Services.Implementations
 
             if(editPermission.Equals("read", StringComparison.CurrentCultureIgnoreCase))
             {
-                Console.WriteLine("Not Sufficient rights to work on document.");
+                Console.WriteLine("Not sufficient rights to work on document.");
                 return false;
             }
            

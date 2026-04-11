@@ -221,7 +221,7 @@ namespace ClercSystem.Controllers
             //only the creator of the document can edit it ?????
             if (!checkIfDocumentCreatorIsValidOrDocumentExists)
             {
-                TempData["Message"] = "You do not have sufficient rights to work on this document or it does not exist.";
+                TempData["Message"] = "You do not have sufficient rights to work on this document or it does not exist.If you are an admin user you can restrict it.";
                 return RedirectToAction(nameof(Index));
             }
 
