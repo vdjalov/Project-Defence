@@ -1,6 +1,7 @@
 ﻿using ClercSystem.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;
 
 namespace ClercSystem.Data.Seeder
 {
@@ -72,7 +73,10 @@ namespace ClercSystem.Data.Seeder
                 }
             }
 
+            // Adding claims so that i can get user confition through it
+            await userManager.AddClaimAsync(user, new Claim("IsManager", user.IsManager.ToString()));
 
+              
         }
     }
 }

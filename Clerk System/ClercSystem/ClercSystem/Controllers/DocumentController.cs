@@ -116,10 +116,10 @@ namespace ClercSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.UserId = userId.ToString();
-            ViewBag.CreatorId = editDocumentViewModel.CreatedById;
-           
-           return View(editDocumentViewModel);
+            bool isManager = User.Claims.Any(c => c.Type == "IsManager" && c.Value.ToLower() == "true");
+
+            ViewBag.Ismanager = isManager;
+            return View(editDocumentViewModel);
         }
 
         [HttpPost]

@@ -4,6 +4,7 @@ using ClercSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ClercSystem.Areas.Admin.Controllers
 {
@@ -192,8 +193,26 @@ namespace ClercSystem.Areas.Admin.Controllers
             if (IsManager == "true".ToLower())
             {
                 user.IsManager = true;
+            } else
+            {
+                user.IsManager = false;
             }
-         
+
+
+            var existingClaim = (await userManager.GetClaimsAsync(user)) // updating claims 
+            .FirstOrDefault(c => c.Type == "IsManager");
+
+            if (existingClaim != null)
+            {
+                await userManager.RemoveClaimAsync(user, existingClaim); // remove old claim
+            }
+
+            // add updated claim
+            await userManager.AddClaimAsync( // add claim
+                user,
+                new Claim("IsManager", IsManager)
+            );
+
             var result = await userManager.UpdateAsync(user);
 
             if (result.Succeeded)
