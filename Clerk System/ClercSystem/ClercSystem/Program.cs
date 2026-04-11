@@ -16,9 +16,9 @@ namespace ClercSystem
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            
+
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(connectionString);
@@ -65,14 +65,14 @@ namespace ClercSystem
             builder.Services.AddRazorPages();
 
             // Add the custom authorization policies
-            builder.Services.AddAppAuthorization(); 
+            builder.Services.AddAppAuthorization();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
-            using (var scope = app.Services.CreateScope()) 
+            using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 await AppDbSeeder.SeedDepartmentsAsync(services); // seed departments
@@ -81,8 +81,8 @@ namespace ClercSystem
 
                 var departmentServie = services.GetRequiredService<IDepartmentService>();
                 bool doesDepartmentExist = await departmentServie.DepartmentExistsAsync("Management", "Sofia");
-               
-                if(doesDepartmentExist) // Only seed the admin user if the "Management" department in "Sofia" exists, otherwise skip seeding the admin user to avoid potential issues with missing department reference.
+
+                if (doesDepartmentExist) // Only seed the admin user if the "Management" department in "Sofia" exists, otherwise skip seeding the admin user to avoid potential issues with missing department reference.
                 {
                     Guid departmentId = (await departmentServie.GetAllDepartmentsAsync())
                         .FirstOrDefault(d => d.Name == "Management" && d.Location == "Sofia").DepartmentId;
@@ -91,12 +91,15 @@ namespace ClercSystem
                 }
             }
 
-            
-
+            var envi = app.Environment.EnvironmentName;
+         
             // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error/500");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -133,11 +136,11 @@ namespace ClercSystem
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=UserManagement}/{action=Index}/{id?}");
-                
+
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+                
 
             app.Run();
         }

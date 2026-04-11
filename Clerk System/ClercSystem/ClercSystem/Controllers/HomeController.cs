@@ -16,12 +16,20 @@ namespace ClercSystem.Controllers
             return View();
         }
 
+        public async Task<IActionResult> test()
+        {
+         
+            ViewBag.ErrorMessage = "You do noit have the right to enter this page";
+            return StatusCode(401);
+        }
+        
+
 
         //public IActionResult Privacy()
         //{
         //    return View();
         //}
 
-       
+
     }
 }
