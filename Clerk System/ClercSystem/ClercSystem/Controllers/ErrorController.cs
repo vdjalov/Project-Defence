@@ -42,6 +42,10 @@ namespace ClercSystem.Controllers
                     Response.StatusCode = 401;
                     return View("401");
 
+                case 400:
+                    Response.StatusCode = 400;
+                    return View("400");
+
                 default:
                     return View("Error"); // generic fallback
             }

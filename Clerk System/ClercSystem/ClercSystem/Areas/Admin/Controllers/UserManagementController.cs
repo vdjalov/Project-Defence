@@ -80,7 +80,7 @@ namespace ClercSystem.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return BadRequest(result.Errors);
+            return BadRequest(); // left on purpose to show example for bad request if role assigne twice gores to bad request
         }
 
         [HttpPost]

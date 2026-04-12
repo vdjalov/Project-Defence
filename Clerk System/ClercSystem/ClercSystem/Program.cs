@@ -28,42 +28,6 @@ namespace ClercSystem
             builder.Services.AddApplicationServices(builder.Configuration); // add app services, app repositories included to the app
             builder.Services.AddApplicationIdentityServices(builder.Configuration); // add Identiti Services to the app
 
-            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            //builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            //builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
-            //builder.Services.AddScoped<IDocumentUserRepository, DocumentUserRepository>();
-
-            //builder.Services.AddScoped<IDepartmentService, DepartmentService>();
-            //builder.Services.AddScoped<ICategoryService, CategoryService>();
-            //builder.Services.AddScoped<IDocumentService, DocumentService>();
-            //builder.Services.AddScoped<IMyDocumentUserService, MyDocumentUserService>();
-
-
-            //builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
-            //{
-            //    //SignIn settings
-            //    options.SignIn.RequireConfirmedAccount = false;
-            //    options.SignIn.RequireConfirmedEmail = false;
-            //    options.SignIn.RequireConfirmedPhoneNumber = false;
-
-            //    // Password Settings
-            //    options.Password.RequireDigit = false;
-            //    options.Password.RequireNonAlphanumeric = false;
-            //    options.Password.RequireUppercase = false;
-
-            //    //User Settings
-            //    options.User.RequireUniqueEmail = true;
-
-            //    //Lockout Settings
-            //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
-            //    options.Lockout.MaxFailedAccessAttempts = 5;
-            //    options.Lockout.AllowedForNewUsers = true;
-
-
-            //})
-            //    .AddEntityFrameworkStores<AppDbContext>()
-            //    .AddDefaultTokenProviders()
-            //    .AddDefaultUI();
 
             // 
             builder.Services.AddRazorPages();
