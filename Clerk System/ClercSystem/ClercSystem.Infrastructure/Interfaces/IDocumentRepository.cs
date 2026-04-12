@@ -9,6 +9,7 @@ namespace ClercSystem.Infrastructure.Interfaces
     {
         IQueryable<Document> GetAll();
         Task<Document?> GetByIdAsync(Guid id);
+        Task<Document?> GetByIdAsyncUnfiltered(Guid id);
         Task<Document?> GetByTitleAsync(string name);
         Task AddAndSaveAsync(Document department);
         Task<bool> UpdateAndSaveAsync(Document document);

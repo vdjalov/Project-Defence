@@ -7,7 +7,7 @@ namespace ClercSystem.Services.Interfaces
 {
     public interface IDocumentService
     {
-        
+
         Task<(IEnumerable<AllDocumentsViewModel> Docs, int TotalCount)> GetAllDocumentsAsync(string search, int page, int pageSize);
         Task<CreateDocumentViewModel> GetCreateModelAsync();
         Task<bool> CreateDocumentAsync(CreateDocumentViewModel model, Guid userId, DateTime date);

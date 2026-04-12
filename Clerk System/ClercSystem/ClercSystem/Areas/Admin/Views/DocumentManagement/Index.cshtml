@@ -1,10 +1,10 @@
-﻿@using ClercSystem.ViewModels.Document;
-@model IEnumerable<AllDocumentsViewModel>;
+﻿@using ClercSystem.Areas.Admin.Models.DocumentManagement;
+@model IEnumerable<AllDocumentsAdminViewModel>;
 
-@{
+@* @{
     int currentPage = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
-}
+} *@
 
 @if (TempData["Message"] != null)
 {
@@ -45,7 +45,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (AllDocumentsViewModel doc in Model)
+        @foreach (AllDocumentsAdminViewModel doc in Model)
         {
             <tr>
                 <td>@doc.Title</td>
@@ -53,21 +53,52 @@
                 <td>@doc.CategoryName</td>
                 <td>@doc.DepartmentName</td>
                 <td class="text-center">
-                    <a asp-action="More" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
+                    <a asp-area="Document" asp-controller="Document" asp-action="More" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
                         <i class="bi bi-calendar-plus"></i> More
                     </a>
 
                     @if (User.IsInRole("Admin") || User.IsInRole("User"))
                     {
-                        <a asp-action="Edit" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
+                        <a asp-area="Document" asp-controller="Document" asp-action="Edit" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
                             <i class="bi bi-calendar-plus"></i> Edit
                         </a>
-                        <form asp-area="Document" asp-controller="Document" asp-action="SoftDelete" method="post" class="d-inline">
-                            <input type="hidden" name="id" value="@doc.Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                Delete
-                            </button>
-                        </form>
+
+                        @if(!doc.IsDeleted)
+                        {
+                            if(User.IsInRole("Admin"))
+                            {
+                                <form asp-route-returnUrl="@Url.Action("Index", "DocumentManagement", new { area = "Admin" })", asp-area="Document" asp-controller="Document" asp-action="SoftDelete" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@doc.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        Delete
+                                    </button>
+                                </form>
+                            } else
+                            {
+                                <form asp-area="Document" asp-controller="Document" asp-action="SoftDelete" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@doc.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        Delete
+                                    </button>
+                                </form>
+                            }
+                            
+                            
+                        } else
+                        {
+                            <form asp-action="UndeleteDocument" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@doc.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    Undelete 
+                                </button>
+                            </form>
+                        }
+
+
+
+                        @* <a asp-action="SoftDelete" asp-route-id="@doc.Id" class="btn btn-info btn-sm me-2">
+                            <i class="bi bi-calendar-plus"></i> Delete
+                        </a> *@
                     }
                 </td>
             </tr>
@@ -76,7 +107,7 @@
 </table>
 
 @* PAGINATION BOOTSRAP *@
-<nav aria-label="Documents pagination">
+@* <nav aria-label="Documents pagination">
     <ul class="pagination pagination-lg justify-content-center">
 
         <!-- Previous -->
@@ -148,5 +179,5 @@
 
     </ul>
 </nav>
-
+ *@
 <script src="~/js/DocumentAlerts.js"></script>

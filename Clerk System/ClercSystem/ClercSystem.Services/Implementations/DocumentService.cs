@@ -6,7 +6,10 @@ using ClercSystem.ViewModels.Department;
 using ClercSystem.ViewModels.Document;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+
+
 
 namespace ClercSystem.Services.Implementations
 {
@@ -127,11 +130,12 @@ namespace ClercSystem.Services.Implementations
             return hasBeenUpdated;
         }
 
+       
 
         // this method is used to get all documents with pagination and search functionality
         public async Task<(IEnumerable<AllDocumentsViewModel> Docs, int TotalCount)> GetAllDocumentsAsync(string search, int page, int pageSize)
         {
-            IQueryable<Document> allDocuments =  this.documentRepository.GetAll().Where(d => !d.IsDeleted);
+            IQueryable<Document> allDocuments =  this.documentRepository.GetAll();
          
 
             if (!string.IsNullOrEmpty(search))

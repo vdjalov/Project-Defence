@@ -41,9 +41,11 @@ namespace ClercSystem.Infrastructure.Implementations
             return  this.context.Documents;
         }
 
-        public async Task<Document?> GetByIdAsync(Guid id)
+        public async Task<Document> GetByIdAsync(Guid id)
         {
-            return await this.context.Documents.FindAsync(id);
+            Document document = await this.context.Documents.FindAsync(id);
+
+            return document;
         }
 
         public async Task<Document?> GetByTitleAsync(string title)
@@ -87,6 +89,12 @@ namespace ClercSystem.Infrastructure.Implementations
             await this.SaveChangesAsync();
 
             return true;
+        }
+
+        // Method for undelete admin only
+        public async Task<Document?> GetByIdAsyncUnfiltered(Guid id)
+        {
+            return await this.context.Documents.IgnoreQueryFilters().FirstOrDefaultAsync(d => d.Id == id);
         }
     }
 }

@@ -194,9 +194,9 @@ namespace ClercSystem.Controllers
         }
 
 
-        [HttpGet] // soft deleting a document so that it does not get lost permanently and can be restored if needed
+        [HttpPost] // soft deleting a document so that it does not get lost permanently and can be restored if needed
         [Authorize(Policy = "CanUpdate")]
-        public async Task<IActionResult> SoftDelete(string id)
+        public async Task<IActionResult> SoftDelete(string id, string returnUrl)
         {
 
             bool isGuidValid = base.CheckIfGuidIsValid(id);
@@ -236,6 +236,11 @@ namespace ClercSystem.Controllers
             }
 
             TempData["Message"] = "Document deleted successfully!";
+            if(!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

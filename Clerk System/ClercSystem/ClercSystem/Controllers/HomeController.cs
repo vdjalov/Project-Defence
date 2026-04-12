@@ -26,7 +26,7 @@ namespace ClercSystem.Controllers
         public async Task<IActionResult> test()
         {
          
-            ViewBag.ErrorMessage = "You do noit have the right to enter this page";
+            ViewBag.ErrorMessage = "Message will not get passed. etеrning specific status code.";
             return StatusCode(401);
         }
 
