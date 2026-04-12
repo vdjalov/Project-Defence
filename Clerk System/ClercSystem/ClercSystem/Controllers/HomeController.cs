@@ -16,6 +16,7 @@ namespace ClercSystem.Controllers
             return View();
         }
 
+        // testing different errors method 
         public async Task<IActionResult> test()
         {
          

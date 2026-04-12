@@ -16,50 +16,54 @@ namespace ClercSystem
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            //string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+            //    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-            builder.Services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseSqlServer(connectionString);
-            });
+            //builder.Services.AddDbContext<AppDbContext>(options =>
+            //{
+            //    options.UseSqlServer(connectionString);
+            //});
 
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
-            builder.Services.AddScoped<IDocumentUserRepository, DocumentUserRepository>();
+            builder.Services.AddApplicationDatabase(builder.Configuration); // adding db connection string with a method 
+            builder.Services.AddApplicationServices(builder.Configuration); // add app services, app repositories included to the app
+            builder.Services.AddApplicationIdentityServices(builder.Configuration); // add Identiti Services to the app
 
-            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
-            builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddScoped<IDocumentService, DocumentService>();
-            builder.Services.AddScoped<IMyDocumentUserService, MyDocumentUserService>();
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            //builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            //builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+            //builder.Services.AddScoped<IDocumentUserRepository, DocumentUserRepository>();
 
-
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
-            {
-                //SignIn settings
-                options.SignIn.RequireConfirmedAccount = false;
-                options.SignIn.RequireConfirmedEmail = false;
-                options.SignIn.RequireConfirmedPhoneNumber = false;
-
-                // Password Settings
-                options.Password.RequireDigit = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-
-                //User Settings
-                options.User.RequireUniqueEmail = true;
-
-                //Lockout Settings
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
+            //builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            //builder.Services.AddScoped<ICategoryService, CategoryService>();
+            //builder.Services.AddScoped<IDocumentService, DocumentService>();
+            //builder.Services.AddScoped<IMyDocumentUserService, MyDocumentUserService>();
 
 
-            })
-                .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders()
-                .AddDefaultUI();
+            //builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+            //{
+            //    //SignIn settings
+            //    options.SignIn.RequireConfirmedAccount = false;
+            //    options.SignIn.RequireConfirmedEmail = false;
+            //    options.SignIn.RequireConfirmedPhoneNumber = false;
+
+            //    // Password Settings
+            //    options.Password.RequireDigit = false;
+            //    options.Password.RequireNonAlphanumeric = false;
+            //    options.Password.RequireUppercase = false;
+
+            //    //User Settings
+            //    options.User.RequireUniqueEmail = true;
+
+            //    //Lockout Settings
+            //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+            //    options.Lockout.MaxFailedAccessAttempts = 5;
+            //    options.Lockout.AllowedForNewUsers = true;
+
+
+            //})
+            //    .AddEntityFrameworkStores<AppDbContext>()
+            //    .AddDefaultTokenProviders()
+            //    .AddDefaultUI();
 
             // 
             builder.Services.AddRazorPages();
