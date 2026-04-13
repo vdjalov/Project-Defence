@@ -15,6 +15,8 @@
 
     <form asp-action="Edit" method="post">
         <input asp-for="CreatedById" type="hidden" value="@Model.CreatedById"/>
+        <input name="source" type="hidden" value="@ViewBag.Source" />
+
         <div class="form-group">
             <label asp-for="Title" class="control-label"></label>
             <input asp-for="Title" class="form-control" />

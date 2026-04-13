@@ -70,6 +70,7 @@ namespace ClercSystem.Areas.Admin.Controllers
                 return BadRequest();
             }
 
+            TempData["Message"] = "Document has been restored.";
             return RedirectToAction(nameof(Index));
         }
     }

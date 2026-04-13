@@ -23,4 +23,12 @@
 <p><strong>Creator:</strong> @Model.CreatedBy</p>
 <p><strong>Category Name:</strong> @Model.CategoryName</p>
 
-<a asp-action="Index" class="btn btn-primary">Back to All Documents</a>
+@if(ViewBag.Source != null)
+{
+    <a asp-area="Admin" asp-controller="DocumentManagement" asp-action="Index" class="btn btn-primary">Back to All Documents</a>
+}else
+{
+    <a asp-action="Index" class="btn btn-primary">Back to All Documents</a>
+}
+
+

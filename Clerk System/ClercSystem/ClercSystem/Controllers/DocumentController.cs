@@ -83,7 +83,7 @@ namespace ClercSystem.Controllers
 
         [HttpGet]
         [Authorize(Policy = "CanUpdate")]
-        public async Task<IActionResult> Edit(string id) // edit document get view
+        public async Task<IActionResult> Edit(string id, string source) // edit document get view
         {
             bool isGuidValid = base.CheckIfGuidIsValid(id);
 
@@ -119,12 +119,13 @@ namespace ClercSystem.Controllers
             bool isManager = User.Claims.Any(c => c.Type == "IsManager" && c.Value.ToLower() == "true");
 
             ViewBag.Ismanager = isManager;
+            ViewBag.Source = source;
             return View(editDocumentViewModel);
         }
 
         [HttpPost]
         [Authorize(Policy = "CanUpdate")]
-        public async Task<IActionResult> Edit(string id, EditDocumentViewModel model)
+        public async Task<IActionResult> Edit(string id, EditDocumentViewModel model, string source)
         {
             bool isGuidValid = base.CheckIfGuidIsValid(id);
 
@@ -166,13 +167,18 @@ namespace ClercSystem.Controllers
             }
 
             TempData["Message"] = "Document updated successfully!";
+            if(source != null)
+            {
+                return RedirectToAction("Index", "DocumentManagement", new { area = "Admin" });
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
 
         [HttpGet]
         [Authorize(Policy = "CanRead")]
-        public async Task<IActionResult> More(string id) // view more details about a document
+        public async Task<IActionResult> More(string id, string source) // view more details about a document
         {
             bool isGuidValid = base.CheckIfGuidIsValid(id);
             if (!isGuidValid)
@@ -187,8 +193,17 @@ namespace ClercSystem.Controllers
                 TempData["ErrorMessage"] = "Document not found.";
                 return RedirectToAction(nameof(Index));
             }
+            DocumentMoreViewModel model = null;
 
-            DocumentMoreViewModel model = await this.documentService.GetDetailsAsync(Guid.Parse(id));
+            try // throws bad request if cant get the data
+            {
+                model = await this.documentService.GetDetailsAsync(Guid.Parse(id));
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+            ViewBag.Source = source;
 
             return View(model);
         }

@@ -54,12 +54,22 @@ namespace ClercSystem.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AssignRole(Guid userId, string role) // assign role to user
         {
+           
             var user = await userManager.FindByIdAsync(userId.ToString());
 
             if (user == null) // User not found error handling
             {
                 return NotFound();
             }
+
+            var currentUser = userManager.GetUserId(User);
+
+            if (currentUser.ToString() == user.Id.ToString()) // prevents user from deassigning roles to himself
+            {
+                TempData["Message"] = "You cannot assign your own role";
+                return RedirectToAction(nameof(Index));
+            }
+           
 
             var userIsLockedOut = await userManager.IsLockedOutAsync(user);
             if (userIsLockedOut)
@@ -91,6 +101,14 @@ namespace ClercSystem.Areas.Admin.Controllers
             if (user == null) // User not found error handling
             {
                 return NotFound();
+            }
+
+            var currentUser = userManager.GetUserId(User);
+
+            if (currentUser.ToString() == user.Id.ToString()) // prevents user from deassigning roles to himself
+            {
+                TempData["Message"] = "You cannot de-assign your own role";
+                return RedirectToAction(nameof(Index));
             }
 
             var userIsLockedOut = await userManager.IsLockedOutAsync(user);
