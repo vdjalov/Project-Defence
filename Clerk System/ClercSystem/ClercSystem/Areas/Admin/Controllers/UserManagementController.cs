@@ -1,4 +1,4 @@
-﻿using ClercSystem.Areas.Admin.Models.UserManagement;
+﻿using ClercSystem.Areas.Admin.ViewModels.UserManagement;
 using ClercSystem.Data.Models;
 using ClercSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -44,6 +44,7 @@ namespace ClercSystem.Areas.Admin.Controllers
                     Departments = await this.departmentService.GetAllDepartmentsAsync(),
                     IsManager = user.IsManager ? "true" : "false",
                     Email = user.Email,
+                    LockoutEnd = user.LockoutEnd != null ? "not null" : null ,
                     Roles = roles.ToList()
                 });
             }

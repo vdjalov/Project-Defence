@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClercSystem.Areas.Admin.Models.DocumentManagement
+namespace ClercSystem.Areas.Admin.ViewModels.DocumentManagement
 {
     public class AllDocumentsAdminViewModel
     {

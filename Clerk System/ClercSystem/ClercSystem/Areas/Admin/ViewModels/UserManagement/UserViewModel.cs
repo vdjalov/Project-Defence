@@ -1,6 +1,6 @@
 ﻿using ClercSystem.ViewModels.Department;
 
-namespace ClercSystem.Areas.Admin.Models.UserManagement
+namespace ClercSystem.Areas.Admin.ViewModels.UserManagement
 {
     public class UserViewModel
     {
@@ -15,6 +15,8 @@ namespace ClercSystem.Areas.Admin.Models.UserManagement
         public string Email { get; set; } = string.Empty;
 
         public string? DepartmentId { get; set; }
+
+        public string? LockoutEnd { get; set; }
         public List<AllDepartmentsViewModel> Departments{ get; set; } = new List<AllDepartmentsViewModel>();
 
         public List<string> Roles { get; set; } = new List<string>();

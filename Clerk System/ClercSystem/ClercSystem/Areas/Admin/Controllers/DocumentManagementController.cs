@@ -1,4 +1,4 @@
-﻿using ClercSystem.Areas.Admin.Models.DocumentManagement;
+﻿using ClercSystem.Areas.Admin.ViewModels.DocumentManagement;
 using ClercSystem.Data.Models;
 using ClercSystem.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authorization;

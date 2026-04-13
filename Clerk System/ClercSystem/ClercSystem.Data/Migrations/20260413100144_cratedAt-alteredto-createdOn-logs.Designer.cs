@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClercSystem.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260407070626_start")]
-    partial class start
+    [Migration("20260413100144_cratedAt-alteredto-createdOn-logs")]
+    partial class cratedAtalteredtocreatedOnlogs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -203,17 +203,23 @@ namespace ClercSystem.Data.Migrations
 
             modelBuilder.Entity("ClercSystem.Data.Models.DocumentLog", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("AmendedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Desription")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<Guid>("DocumentId")
                         .HasColumnType("uniqueidentifier");

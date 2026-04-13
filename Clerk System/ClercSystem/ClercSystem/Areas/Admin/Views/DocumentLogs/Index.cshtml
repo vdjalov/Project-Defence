@@ -1,0 +1,58 @@
+﻿@using ClercSystem.Areas.Admin.ViewModels.DocumentLogs;
+@model IEnumerable<AllDocumentLogsViewModel>;
+
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Message"]
+    </div>
+}
+
+<h2>DocuemntLogs</h2>
+   
+@* @if (User.IsInRole("Admin"))
+{
+    <div class="d-flex justify-content-end mb-4">
+        <a asp-action="Create" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle"></i> Add New Category
+        </a>
+    </div>
+} *@
+
+@if(User.IsInRole("Admin"))
+{
+<table class="table table-hover table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Version</th>
+            <th scope="col">Creator</th>
+            <th scope="col">Creation Date</th>
+            <th scope="col">Amended Date</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+            @*  <th scope="col" class="text-center">Program</th> *@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (AllDocumentLogsViewModel docLog in Model)
+        {
+            <tr>
+                <td>@docLog.DocumentName</td>
+                <td>@docLog.VersionNumber</td>
+                <td>@docLog.CreatedByName</td>
+                <td>@docLog.CreatedOn</td>
+                <td>@docLog.AmendedOn</td>
+                <td>@docLog.Desription</td>
+
+                <td class="text-center">
+                    <a asp-action="more" asp-route-id="@docLog.Id" class="btn btn-info btn-sm me-2">
+                        <i class="bi bi-calendar-plus"></i> More
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}

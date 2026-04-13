@@ -1,4 +1,4 @@
-﻿﻿@using ClercSystem.Areas.Admin.Models.UserManagement;
+﻿﻿@using ClercSystem.Areas.Admin.ViewModels.UserManagement;
 @model IEnumerable<UserViewModel>
 
 
@@ -94,10 +94,20 @@
                         </form>
                     </td>
                     <td>
-                        <form method="post" asp-action="DeleteUser" asp-controller="UserManagement" asp-area="Admin" class="d-inline ms-2">
-                            <input type="hidden" name="userId" value="@user.Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">Delete User</button>
-                        </form>
+                            @if(user.LockoutEnd != null)
+                        {
+                            <form method="post" asp-action="DeleteUser" asp-controller="UserManagement" asp-area="Admin" class="d-inline ms-2">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">User Scheduled for Deletion</button>
+                            </form>
+                        } else
+                        {
+                            <form method="post" asp-action="DeleteUser" asp-controller="UserManagement" asp-area="Admin" class="d-inline ms-2">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Delete User</button>
+                            </form>
+                        }
+                       
                     </td>
                 </tr>
             }

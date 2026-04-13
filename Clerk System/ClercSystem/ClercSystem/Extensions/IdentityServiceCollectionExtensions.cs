@@ -36,6 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddScoped<IDocumentUserRepository, DocumentUserRepository>();
+            services.AddScoped<IDocumentLogsRepository, DocumentLogsRepository>();
 
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<ICategoryService, CategoryService>();
