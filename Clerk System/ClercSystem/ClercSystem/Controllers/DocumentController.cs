@@ -135,6 +135,11 @@ namespace ClercSystem.Controllers
                 return View(model);
             }
 
+            if(User.IsInRole("User")) // If User so that source is true for redirection purposes.
+            {
+                ModelState.Remove("source");
+            }
+
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMessage"] = "Oops something went awire.";

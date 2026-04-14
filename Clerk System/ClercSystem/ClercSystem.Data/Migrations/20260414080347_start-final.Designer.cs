@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClercSystem.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260413100144_cratedAt-alteredto-createdOn-logs")]
-    partial class cratedAtalteredtocreatedOnlogs
+    [Migration("20260414080347_start-final")]
+    partial class startfinal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

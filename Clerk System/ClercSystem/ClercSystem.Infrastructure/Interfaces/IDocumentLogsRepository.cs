@@ -10,7 +10,7 @@ namespace ClercSystem.Infrastructure.Interfaces
        
         public IQueryable<DocumentLog> GetDocumentLogs();
         public Task<IEnumerable<DocumentLog>> GetDocumentLogsByDocumentIdAsync(Guid documentId);
-
+        public Task<bool> AddAndSaveAsync(DocumentLog document);
 
     }
 }

@@ -12,6 +12,11 @@ namespace ClercSystem.Data.Models
         [Key]
         public Guid Id { get; set; }
 
+        public DocumentLog()
+        {
+            this.Id = Guid.NewGuid();
+        }
+
         [Required]
         public Guid DocumentId { get; set; }
 
@@ -31,7 +36,7 @@ namespace ClercSystem.Data.Models
         public ApplicationUser CreatedBy { get; set; } = null!;
 
         [Required]
-        [StringLength(DescriptionMaxLength, MinimumLength =DescriptionMinLength)]
+        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength)]
         public string Desription { get; set; } = null!;
 
 

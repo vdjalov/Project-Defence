@@ -1,6 +1,7 @@
 ﻿using ClercSystem.Data;
 using ClercSystem.Data.Models;
 using ClercSystem.Infrastructure.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace ClercSystem.Infrastructure.Implementations
@@ -29,6 +30,21 @@ namespace ClercSystem.Infrastructure.Implementations
                 
 
             return documentLogs;
+        }
+
+        public async Task<bool> AddAndSaveAsync(DocumentLog documentLog)
+        {
+            DocumentLog log = await this.context.DocumentLogs.FirstOrDefaultAsync(dl => dl.Id == documentLog.Id);
+
+            if (log != null)
+            {
+                return false;
+            }
+
+            await this.context.DocumentLogs.AddAsync(documentLog);
+            await this.context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

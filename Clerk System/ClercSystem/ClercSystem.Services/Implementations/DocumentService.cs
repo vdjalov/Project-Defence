@@ -4,10 +4,8 @@ using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Category;
 using ClercSystem.ViewModels.Department;
 using ClercSystem.ViewModels.Document;
-using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using System.Transactions;
 
 
 
@@ -19,16 +17,19 @@ namespace ClercSystem.Services.Implementations
         private readonly IDepartmentRepository departmentRepository;
         private readonly ICategoryRepository categoryRepository;
         private readonly IDocumentUserRepository documentUserRepository;
+        private readonly IDocumentLogsRepository documentLogsRepository;
 
         public DocumentService(IDocumentRepository _documentRepository,
                             IDepartmentRepository _departmentRepository,
                             ICategoryRepository categoryRepository,
-                            IDocumentUserRepository documentUserRepository)
+                            IDocumentUserRepository documentUserRepository,
+                            IDocumentLogsRepository documentLogsRepository)
         {
             this.documentRepository = _documentRepository;
             this.departmentRepository = _departmentRepository;
             this.categoryRepository = categoryRepository;
             this.documentUserRepository = documentUserRepository;
+            this.documentLogsRepository = documentLogsRepository;
         }
 
         public async Task<bool> CheckIfDocumentCreatorIsValid(Guid documentId, Guid userId)
@@ -49,7 +50,7 @@ namespace ClercSystem.Services.Implementations
         }
 
         // this method is used to create a document and assign the user who created it with full permissions
-        public async Task<bool> CreateDocumentAsync(CreateDocumentViewModel model, Guid userId,DateTime date )
+        public async Task<bool> CreateDocumentAsync(CreateDocumentViewModel model, Guid userId, DateTime date )
         {
             Document document = new Document
             {
@@ -71,16 +72,29 @@ namespace ClercSystem.Services.Implementations
                 Permission = PermissionType.Full // persmission should amended by admin if necessary all documents get default 
             };
 
-            try
+            DocumentLog documentLog = new DocumentLog()
             {
-                await this.documentRepository.AddAndSaveAsync(document);
-                await this.documentUserRepository.AddAndSaveAsync(documentUser);
+                DocumentId = document.Id,
+                VersionNumber = 1,
+                CreatedById = userId,
+                Desription = document.Description
+            };
 
+            try{
+                // either all gets created or nothing 
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    await this.documentRepository.AddAndSaveAsync(document);
+                    await this.documentUserRepository.AddAndSaveAsync(documentUser);
+                    await this.documentLogsRepository.AddAndSaveAsync(documentLog);
+
+                    scope.Complete();
+                }
             } catch (Exception ex)
-            {
-                return false;
-            }
-
+                {
+                    return false;
+                }
+            
             return true;
         }
 
@@ -106,14 +120,33 @@ namespace ClercSystem.Services.Implementations
                 return false;
             }
 
-            bool hasBeenUpdated = false;
-
-            if(isUserInRoleAdmin)
+            DocumentLog documentLog = new DocumentLog() // creating new log for the document with the same id
             {
-                documentUser.Permission = Enum.Parse<PermissionType>(model.PermissionType);
-                hasBeenUpdated = await documentRepository.UpdateAndSaveAsync(document);
-                hasBeenUpdated = await documentUserRepository.UpdateAndSaveAsync(documentUser);
-                return hasBeenUpdated;
+                DocumentId = document.Id,
+                VersionNumber = 1,
+                CreatedById = document.CreatedById,
+                Desription = document.Description
+            };
+
+            if (isUserInRoleAdmin)
+            {
+                try
+                {
+                    documentUser.Permission = Enum.Parse<PermissionType>(model.PermissionType);
+
+                    using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                    {
+                        await documentRepository.UpdateAndSaveAsync(document);
+                        await documentUserRepository.UpdateAndSaveAsync(documentUser);
+                        await documentLogsRepository.AddAndSaveAsync(documentLog);
+
+                        scope.Complete();
+                    }
+                } catch (Exception ex)
+                {
+                    return false;
+                }
+               
             } 
 
             string editPermission = documentUser.Permission.ToString();
@@ -123,11 +156,24 @@ namespace ClercSystem.Services.Implementations
                 Console.WriteLine("Not sufficient rights to work on document.");
                 return false;
             }
-           
-            hasBeenUpdated = await documentRepository.UpdateAndSaveAsync(document);
-            hasBeenUpdated = await documentUserRepository.UpdateAndSaveAsync(documentUser);
 
-            return hasBeenUpdated;
+            try
+            {
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    await documentRepository.UpdateAndSaveAsync(document);
+                    await documentUserRepository.UpdateAndSaveAsync(documentUser);
+                    await documentLogsRepository.AddAndSaveAsync(documentLog);
+
+                    scope.Complete();
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
         }
 
        

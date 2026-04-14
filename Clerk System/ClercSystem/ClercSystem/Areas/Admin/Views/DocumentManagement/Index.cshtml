@@ -28,7 +28,7 @@
  *@@if (User.IsInRole("Admin") || User.IsInRole("User"))
 {
     <div class="d-flex justify-content-end mb-4">
-        <a asp-action="Create" class="btn btn-primary btn-lg">
+        <a asp-area="Document" asp-controller="Document" asp-action="Create" class="btn btn-primary btn-lg">
             <i class="bi bi-plus-circle"></i> Add New Document
         </a>
     </div>
