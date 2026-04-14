@@ -10,7 +10,9 @@ namespace ClercSystem.Areas.Admin.ViewModels.DocumentLogs
         public Guid Id { get; set; }
 
         [Required]
-        public Guid DocumentName{ get; set; }
+        public string DocumentName { get; set; } = null!;
+
+        public Guid DocumentId { get; set; }
 
         [Required]
         public int VersionNumber { get; set; }

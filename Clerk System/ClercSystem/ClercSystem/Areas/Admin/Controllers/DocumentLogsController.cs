@@ -31,11 +31,31 @@ namespace ClercSystem.Areas.Admin.Controllers
                             AmendedOn = dl.AmendedOn,
                             CreatedByName = dl.CreatedBy.UserName,
                             Desription = dl.Desription,
-                        }).ToListAsync();
+                            DocumentName = dl.Document.Title,
+                           
+                        })
+                        .OrderByDescending(dl => dl.CreatedOn)
+                        .ToListAsync();
                 
 
 
             return View(allDocumentLogsViewModels);
+        }
+
+        [HttpGet] // Getting all logs for the specific document and return it to the partial view 
+        public async Task<IActionResult> GetLogDetails(string documentId)
+        {
+            var logs = await this.documentLogsRepository
+                .GetDocumentLogs()
+                .Where(dl => dl.DocumentId == Guid.Parse(documentId))
+                .ToListAsync();
+
+            if (logs == null || !logs.Any())
+            {
+                return NotFound();
+            }
+
+            return PartialView("_LogDetailsPartial", logs);
         }
     }
 }

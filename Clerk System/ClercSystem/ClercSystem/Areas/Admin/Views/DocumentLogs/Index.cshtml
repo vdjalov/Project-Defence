@@ -9,7 +9,7 @@
     </div>
 }
 
-<h2>DocuemntLogs</h2>
+<h2>Document Logs</h2>
    
 @* @if (User.IsInRole("Admin"))
 {
@@ -47,7 +47,7 @@
                 <td>@docLog.Desription</td>
 
                 <td class="text-center">
-                    <a asp-action="more" asp-route-id="@docLog.Id" class="btn btn-info btn-sm me-2">
+                    <a class="btn btn-info btn-sm me-2 show-more-btn" onclick="ShowMore(event, '@docLog.DocumentId')">
                         <i class="bi bi-calendar-plus"></i> More
                     </a>
                 </td>
@@ -55,4 +55,30 @@
         }
     </tbody>
 </table>
+
+    <!-- Modal -->
+    <div class="modal fade" id="logModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Log Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Content from AJAX goes here -->
+                    <div class="text-center">
+                        <div class="spinner-border" role="status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 }
+
+
+@section Scripts{
+    <script src="~/js/Logs.js"></script>
+}
+  
