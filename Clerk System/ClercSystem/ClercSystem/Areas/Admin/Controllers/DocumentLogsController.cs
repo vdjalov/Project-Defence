@@ -4,6 +4,7 @@ using ClercSystem.Infrastructure.Interfaces;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Areas.Admin.Controllers
@@ -20,11 +21,24 @@ namespace ClercSystem.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
+            IQueryable<DocumentLog> allDocuments = this.documentLogsRepository.GetDocumentLogs();
+
+            if(search != null)
+            {
+                allDocuments = allDocuments
+                            .Where(dl =>
+                               dl.CreatedBy.UserName.ToLower().Contains(search)
+                            || dl.Document.Title.ToLower().Contains(search)
+                            || dl.Desription.ToLower().Contains(search)
+                            || dl.CreatedOn.ToString().ToLower().Contains(search)
+                            || dl.AmendedOn.ToString().ToLower().Contains(search)
+                            );
+            }
+
             List<AllDocumentLogsViewModel> allDocumentLogsViewModels = 
-                await this.documentLogsRepository.GetDocumentLogs()
-                        .Select(dl => new AllDocumentLogsViewModel()
+                await allDocuments.Select(dl => new AllDocumentLogsViewModel()
                         {
                             Id = dl.Id,
                             VersionNumber = dl.VersionNumber,
