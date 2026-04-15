@@ -1,21 +1,27 @@
-﻿@model IEnumerable<ClercSystem.Data.Models.DocumentLog>
+﻿@model IEnumerable<ClercSystem.Areas.Admin.ViewModels.DocumentLogs.DocumentLogDetailsViewMode>
 
 <div class="table-responsive">
     <table class="table table-sm table-striped">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Action</th>
-                <th>User</th>
+                <th>DocumentName</th>
+                <th>VersionNumber</th>
+                <th>Created On</th>
+                <th>Amended On</th>
+                <th>Creator</th>
+                <th>Description</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var log in Model)
             {
                 <tr>
-                    <td>@log.CreatedOn.ToString()</td>
+                    <td>@log.DocumentName</td>
+                    <td>@log.VersionNumber</td>
+                    <td>@log.CreatedOn</td>
+                    <td>@log.AmendedOn.ToString()</td>
+                    <td>@log.CreatedByName</td>
                     <td>@log.Desription</td>
-                    <td>@log.CreatedBy.NormalizedEmail</td>
                 </tr>
             }
         </tbody>

@@ -48,9 +48,19 @@ namespace ClercSystem.Areas.Admin.Controllers
         public async Task<IActionResult> GetLogDetails(string documentId)
         {
 
-            List<DocumentLog> logs = await this.documentLogsRepository
+            List<DocumentLogDetailsViewMode> logs = await this.documentLogsRepository
                 .GetDocumentLogs()
                 .Where(dl => dl.DocumentId == Guid.Parse(documentId))
+                .Select(dl => new DocumentLogDetailsViewMode()
+                {
+                    DocumentName = dl.Document.Title,
+                    VersionNumber = dl.VersionNumber,
+                    CreatedOn = dl.CreatedOn,
+                    AmendedOn= dl.AmendedOn,
+                    CreatedByName = dl.CreatedBy.UserName,
+                    Desription = dl.Desription,
+                })
+                .OrderByDescending (dl => dl.CreatedOn)
                 .ToListAsync();
 
             if (logs == null || !logs.Any())
