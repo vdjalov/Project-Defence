@@ -4,7 +4,6 @@ using ClercSystem.Infrastructure.Interfaces;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Areas.Admin.Controllers
