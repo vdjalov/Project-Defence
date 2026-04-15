@@ -84,11 +84,16 @@
                 <input asp-for="PermissionType" type="hidden" value="@Model.PermissionType" />     
             }
 
-        
 
         <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">Edit Document</button>
-            <a asp-action="Index" class="btn btn-secondary ml-2">Back to List Of Documents</a>
+                @if(ViewBag.Source != null) // returns me to the admin area if source is admin area
+                {
+                    <a asp-area="Admin" asp-controller="DocumentManagement" asp-action="Index" class="btn btn-secondary ml-2">Back to List Of Documents</a>
+                } else
+                {
+                    <a asp-action="Index" class="btn btn-secondary ml-2">Back to List Of Documents</a>
+                }
         </div>
 
 

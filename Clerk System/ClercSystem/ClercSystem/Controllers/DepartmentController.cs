@@ -13,7 +13,6 @@ namespace ClercSystem.Controllers
         public DepartmentController(IDepartmentService _departmentService)
         {
             this.departmentService = _departmentService;
-           
         }
 
         [HttpGet]
@@ -72,7 +71,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
-        [Authorize(Policy = "CanUpdate")]
+        [Authorize(Policy = "CanCreate")]
         public async Task<IActionResult> Edit(string id)
         {
             bool isValidGuid = base.CheckIfGuidIsValid(id);
@@ -98,7 +97,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "CanUpdate")]
+        [Authorize(Policy = "CanCreate")]
         public async Task<IActionResult> Edit(EditDepartmentViewModel model)
         {
             string departmentName = model.Name;

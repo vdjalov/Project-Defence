@@ -74,7 +74,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpGet]
-        [Authorize(Policy = "CanUpdate")]
+        [Authorize(Policy = "CanCreate")]
         public async Task<IActionResult> Edit(string id)
         {
 
@@ -101,7 +101,7 @@ namespace ClercSystem.Controllers
 
 
         [HttpPost]
-        [Authorize(Policy = "CanUpdate")]
+        [Authorize(Policy = "CanCreate")]
         public async Task<IActionResult> Edit(EditCategoryViewModel model)
         {
 

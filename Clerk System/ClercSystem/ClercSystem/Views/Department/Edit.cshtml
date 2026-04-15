@@ -9,14 +9,13 @@
     </div>
 }
 
-@if (User.IsInRole("Admin") || User.IsInRole("User"))
+@if (User.IsInRole("Admin"))
 {
 
     <h2>Edit Department</h2>
 
     <form asp-action="Edit" method="post">
-        @Html.AntiForgeryToken() <!-- Adds anti-forgery token for CSRF protection -->
-        <!-- Hidden field for Department ID -->
+        @Html.AntiForgeryToken() @* I have added these globaly  *@
         <input type="hidden" asp-for="DepartmentId" />
 
         <div class="form-group">

@@ -9,7 +9,7 @@
 }
 
 <h2>Edit Category</h2>
-@if (User.IsInRole("Admin") || User.IsInRole("User"))
+@if (User.IsInRole("Admin"))
 {
     <form asp-action="Edit" method="post">
         @Html.AntiForgeryToken() <!-- Adds anti-forgery token for CSRF protection -->
