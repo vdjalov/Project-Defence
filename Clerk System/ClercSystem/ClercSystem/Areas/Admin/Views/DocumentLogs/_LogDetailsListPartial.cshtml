@@ -13,7 +13,7 @@
             @foreach (var log in Model)
             {
                 <tr>
-                    <td>@log.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@log.CreatedOn.ToString()</td>
                     <td>@log.Desription</td>
                     <td>@log.CreatedBy.NormalizedEmail</td>
                 </tr>

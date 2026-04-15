@@ -1,4 +1,5 @@
 ﻿using ClercSystem.Areas.Admin.ViewModels.DocumentLogs;
+using ClercSystem.Data.Models;
 using ClercSystem.Infrastructure.Interfaces;
 
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +33,7 @@ namespace ClercSystem.Areas.Admin.Controllers
                             CreatedByName = dl.CreatedBy.UserName,
                             Desription = dl.Desription,
                             DocumentName = dl.Document.Title,
+                            DocumentId = dl.DocumentId,
                            
                         })
                         .OrderByDescending(dl => dl.CreatedOn)
@@ -45,7 +47,8 @@ namespace ClercSystem.Areas.Admin.Controllers
         [HttpGet] // Getting all logs for the specific document and return it to the partial view 
         public async Task<IActionResult> GetLogDetails(string documentId)
         {
-            var logs = await this.documentLogsRepository
+
+            List<DocumentLog> logs = await this.documentLogsRepository
                 .GetDocumentLogs()
                 .Where(dl => dl.DocumentId == Guid.Parse(documentId))
                 .ToListAsync();
@@ -55,7 +58,7 @@ namespace ClercSystem.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return PartialView("_LogDetailsPartial", logs);
+            return PartialView("_LogDetailsListPartial", logs);
         }
     }
 }

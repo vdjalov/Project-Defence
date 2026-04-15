@@ -19,8 +19,10 @@ namespace ClercSystem.Infrastructure.Implementations
         // returns all logs
         public IQueryable<DocumentLog> GetDocumentLogs()
         {
-           return this.context.DocumentLogs;
-        }
+           return this.context.DocumentLogs
+                            .Include(dl => dl.Document)
+                            .Include(dl => dl.CreatedBy);
+                    }
 
         // returns only logs of specific document
         public async Task<IEnumerable<DocumentLog>> GetDocumentLogsByDocumentIdAsync(Guid documentId)
