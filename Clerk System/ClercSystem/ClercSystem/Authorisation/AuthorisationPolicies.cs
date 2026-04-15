@@ -19,6 +19,9 @@
 
                 options.AddPolicy("CanDelete", policy =>
                     policy.RequireRole("Admin"));
+
+                options.AddPolicy("CanReadNoAdmin", policy =>
+                    policy.RequireRole("User", "Observer"));
             });
 
             return services;

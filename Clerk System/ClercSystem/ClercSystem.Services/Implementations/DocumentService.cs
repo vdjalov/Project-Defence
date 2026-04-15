@@ -147,30 +147,33 @@ namespace ClercSystem.Services.Implementations
                     return false;
                 }
                
-            } 
-
-            string editPermission = documentUser.Permission.ToString();
-
-            if(editPermission.Equals("read", StringComparison.CurrentCultureIgnoreCase))
+            } else
             {
-                Console.WriteLine("Not sufficient rights to work on document.");
-                return false;
-            }
+                string editPermission = documentUser.Permission.ToString();
 
-            try
-            {
-                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                if (editPermission.Equals("read", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    await documentRepository.UpdateAndSaveAsync(document);
-                    await documentUserRepository.UpdateAndSaveAsync(documentUser);
-                    await documentLogsRepository.AddAndSaveAsync(documentLog);
-
-                    scope.Complete();
+                    Console.WriteLine("Not sufficient rights to work on document.");
+                    return false;
                 }
-            }
-            catch (Exception ex)
-            {
-                return false;
+
+                try
+                {
+                    using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                    {
+
+
+                        await documentRepository.UpdateAndSaveAsync(document);
+                        await documentUserRepository.UpdateAndSaveAsync(documentUser);
+                        await documentLogsRepository.AddAndSaveAsync(documentLog);
+
+                        scope.Complete();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -306,6 +309,7 @@ namespace ClercSystem.Services.Implementations
                 Console.WriteLine("DcoumentUser permissions query not found");
                 return null;
             }
+
 
             EditDocumentViewModel? editDocumentViewModel = new EditDocumentViewModel()
             {

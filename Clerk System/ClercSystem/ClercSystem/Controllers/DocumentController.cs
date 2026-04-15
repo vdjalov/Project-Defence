@@ -18,7 +18,7 @@ namespace ClercSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "CanRead")]
+        [Authorize(Policy = "CanReadNoAdmin")]
         public async Task<IActionResult> Index(string search, int page = 1, int pageSize = 5) // view all documents with pagination and search functionality
         {
 
@@ -83,11 +83,11 @@ namespace ClercSystem.Controllers
 
         [HttpGet]
         [Authorize(Policy = "CanUpdate")]
-        public async Task<IActionResult> Edit(string id, string source) // edit document get view
+        public async Task<IActionResult> Edit(string id, string source) // edit document get view, parameter source used for redirection purposes 
         {
             bool isGuidValid = base.CheckIfGuidIsValid(id);
 
-            if (!isGuidValid)
+            if (!isGuidValid)  // checking if guid is valid 
             {
                 TempData["Message"] = "Invalid Id";
                 return RedirectToAction(nameof(Index));
@@ -107,10 +107,10 @@ namespace ClercSystem.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-
+            
             EditDocumentViewModel editDocumentViewModel = await this.documentService.GetEditModelAsync(Guid.Parse(id));
 
-            if(editDocumentViewModel == null)
+            if(editDocumentViewModel == null) // checking if document exists  
             {
                 TempData["Message"] = "Document not found!";
                 return RedirectToAction(nameof(Index));
