@@ -10,4 +10,7 @@
     <Project Path="ClercSystem/ClercSystem.csproj" />
     <Project Path="ClercSystsem.ViewModels/ClercSystem.ViewModels.csproj" Id="87d012d0-a902-4fb2-a530-42cb2697160e" />
   </Folder>
+  <Folder Name="/WebAppTests/">
+    <Project Path="ClercSystem.Tests/ClercSystem.Tests.csproj" Id="46f5951b-a372-4805-b67f-15423386aa4b" />
+  </Folder>
 </Solution>

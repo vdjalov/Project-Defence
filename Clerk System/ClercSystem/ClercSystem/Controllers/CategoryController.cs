@@ -1,10 +1,8 @@
 ﻿using ClercSystem.Data;
-using ClercSystem.Data.Models;
 using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClercSystem.Controllers
 {
@@ -15,7 +13,7 @@ namespace ClercSystem.Controllers
         
         private readonly ICategoryService categoryService;
 
-        public CategoryController(AppDbContext _context, ICategoryService _categoryService)
+        public CategoryController(ICategoryService _categoryService)
         {
             this.categoryService = _categoryService;
         }
