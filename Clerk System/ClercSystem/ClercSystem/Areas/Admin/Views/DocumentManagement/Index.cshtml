@@ -67,7 +67,7 @@
                         {
                             if(User.IsInRole("Admin"))
                             {
-                                <form asp-route-returnUrl="@Url.Action("Index", "DocumentManagement", new { area = "Admin" })" , asp-area="Admin" asp-controller="DocumentManagement" asp-route-source="admin" asp-action="SoftDelete" method="post" class="d-inline">
+                                <form asp-route-returnUrl="@Url.Action("Index", "DocumentManagement", new { area = "Admin" })" , asp-area="Document" asp-controller="Document" asp-route-source="admin" asp-action="SoftDelete" method="post" class="d-inline">
                                     <input type="hidden" name="id" value="@doc.Id" />
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         Delete
