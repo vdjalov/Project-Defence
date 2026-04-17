@@ -11,9 +11,20 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="NUnit" Version="4.3.2" />
     <PackageReference Include="NUnit.Analyzers" Version="4.7.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClercSystem.Common\ClercSystem.Common.csproj" />
+    <ProjectReference Include="..\ClercSystem.Data\ClercSystem.Data.csproj" />
+    <ProjectReference Include="..\ClercSystem.Infrastructure\ClercSystem.Infrastructure.csproj" />
+    <ProjectReference Include="..\ClercSystem.Models\ClercSystem.Data.Models.csproj" />
+    <ProjectReference Include="..\ClercSystem.Services\ClercSystem.Services.csproj" />
+    <ProjectReference Include="..\ClercSystem\ClercSystem.csproj" />
+    <ProjectReference Include="..\ClercSystsem.ViewModels\ClercSystem.ViewModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
