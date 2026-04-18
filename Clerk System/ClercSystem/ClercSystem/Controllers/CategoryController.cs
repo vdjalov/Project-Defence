@@ -107,16 +107,15 @@ namespace ClercSystem.Controllers
 
             if (!isValidGuid) // checking if guid is valid, if not return to index with error message
             {
-                TempData["Message"] = "Invalid department ID.";
+                TempData["Message"] = "Invalid Category ID.";
                 return RedirectToAction(nameof(Index));
             }
 
             bool categoryExists = await this.categoryService.CategoryExistsAsync(model.CategoryName, model.Description);
 
-            if (categoryExists) // This check is necessary to prevent the creation of duplicate categories.
+            if (categoryExists) // This check is necessary to prevent the creation of duplicate categories with same parameters.
             {
                 ModelState.AddModelError("CategoryName", "A category with this name already exists or no changes were made.");
-                return View(model);
             }
 
             if (!ModelState.IsValid)
@@ -158,9 +157,9 @@ namespace ClercSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            bool checkIfCategorytExists = await this.categoryService.CategoryExistsByIdAsync(id);
+            bool checkIfCategoryDoesNotExists = await this.categoryService.CategoryExistsByIdAsync(id);
            
-            if (!checkIfCategorytExists) // This check is necessary to ensure that the category being viewed actually exists in the database.
+            if (!checkIfCategoryDoesNotExists) // This check is necessary to ensure that the category being viewed actually exists in the database.
             {
                 TempData["Message"] = "Category not found.";
                 return RedirectToAction(nameof(Index));

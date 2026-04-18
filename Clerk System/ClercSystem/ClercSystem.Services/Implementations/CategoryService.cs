@@ -142,7 +142,8 @@ namespace ClercSystem.Services.Implementations
 
         public async Task<(bool success, string? errorMessage)> DeleteCategoryAsync(string id)
         {
-            Category? category = await this.categoryRepository.GetByIdAsync(Guid.Parse(id));
+            Guid guidId = Guid.Parse(id);
+            Category? category = await this.categoryRepository.GetByIdAsync(guidId);
 
             bool hasBeenDeleted = await this.categoryRepository.DeleteAndSaveAsync(category);
 
