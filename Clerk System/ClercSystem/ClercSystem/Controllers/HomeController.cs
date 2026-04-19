@@ -13,22 +13,22 @@ namespace ClercSystem.Controllers
                 return RedirectToAction("Index", "Document");
             }
 
-            return View();
+            return View("Index");
         }
 
 
         public IActionResult Privacy()
         {
-            return View();
+            return View("Privacy");
         }
 
         // testing different errors method 
-        public async Task<IActionResult> test()
-        {
+        //public async Task<IActionResult> test()
+        //{
          
-            ViewBag.ErrorMessage = "Message will not get passed. etеrning specific status code.";
-            return StatusCode(401);
-        }
+        //    ViewBag.ErrorMessage = "Message will not get passed. etеrning specific status code.";
+        //    return StatusCode(401);
+        //}
 
 
       
