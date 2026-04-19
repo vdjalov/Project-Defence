@@ -34,6 +34,7 @@ namespace ClercSystem.Controllers
             return View(model);
         }
 
+
         [HttpPost]
         [Authorize(Policy = "CanCreate")]
         public async Task<IActionResult> Create(CreateDepartmentViewModel model)
@@ -57,7 +58,7 @@ namespace ClercSystem.Controllers
             try
             {
                 await this.departmentService.CreateDepartmentAsync(model);
-                TempData["ErrorMessage"] = "Department created successfully:";
+                TempData["ErrorMessage"] = "Department created successfully.";
 
             } 
             catch (Exception ex)
@@ -200,19 +201,14 @@ namespace ClercSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            try
+            bool departmentDeletionSiccess = await this.departmentService.DeleteDepartmentAsync(id);
+            if(!departmentDeletionSiccess)
             {
-
-                bool departmentDeletionSiccess = await this.departmentService.DeleteDepartmentAsync(id);
-                TempData["ErrorMessage"] = "Department deleted successfully.";
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Unable to delete. Check if there is any documents associated with the department?";
+                TempData["ErrorMessage"] = "Unable to delete. Check if there is any documents associated with the department.";
                 return RedirectToAction(nameof(Index));
-
             }
-
+            
+            TempData["ErrorMessage"] = "Department deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
     }
