@@ -24,7 +24,7 @@ namespace ClercSystem.Controllers
             List<MyDocumentsViewModel> documents = await this.myDocumentService.GetMyDocumentsAsync(id);
 
             return View(documents);
-            
         }
+
     }
 }
