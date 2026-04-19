@@ -57,7 +57,7 @@ namespace ClercSystem.Tests.MyDocumentsControllerTests
             // Fake user ID (depends on your BaseController implementation!)
             this.controller.ControllerContext.HttpContext.User = TestClaimsPrincipalFactory.Create(userId);
 
-
+            this.controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
             IActionResult result = await this.controller.Index();
 
             ViewResult viewResult = result as ViewResult;
@@ -65,6 +65,19 @@ namespace ClercSystem.Tests.MyDocumentsControllerTests
             Assert.That(viewResult, Is.Not.Null);
             Assert.That(viewResult.Model, Is.EqualTo(documents));
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         // helper class to provide with fake Authenticated user id

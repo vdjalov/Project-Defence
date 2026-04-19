@@ -1,12 +1,11 @@
-﻿using ClercSystem.Data;
-using ClercSystem.Services.Interfaces;
+﻿using ClercSystem.Services.Interfaces;
 using ClercSystem.ViewModels.Document;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClercSystem.Controllers
 {
-    [Authorize]
+    
     public class DocumentController : BaseController
     {
         
