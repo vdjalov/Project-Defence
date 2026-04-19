@@ -8,7 +8,7 @@ using Moq;
 using System.Security.Claims;
 
 
-namespace ClercSystem.Tests.MyDocumentsControllerTests
+namespace ClercSystem.Tests.Controllers.MyDocumentsControllerTests
 {
     public class MyDocumentsControllerTests
     {

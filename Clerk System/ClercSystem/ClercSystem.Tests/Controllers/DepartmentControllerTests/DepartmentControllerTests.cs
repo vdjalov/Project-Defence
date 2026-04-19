@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 
-namespace ClercSystem.Tests.DepartmentControllerTests
+namespace ClercSystem.Tests.Controllers.DepartmentControllerTests
 {
     public class DepartmentControllerTests
     {

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 
-namespace ClercSystem.Tests.DocumentControllerTests
+namespace ClercSystem.Tests.Controllers.DocumentControllerTests
 {
     public class DocumentControllerTests
     {

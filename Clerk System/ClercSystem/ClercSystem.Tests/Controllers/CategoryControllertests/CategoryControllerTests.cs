@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 
 
-namespace ClercSystem.Tests.CategoryControllertests
+namespace ClercSystem.Tests.Controllers.CategoryControllertests
 {
     public class CategoryControllerTests
     {

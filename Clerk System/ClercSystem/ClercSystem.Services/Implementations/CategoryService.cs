@@ -14,7 +14,7 @@ namespace ClercSystem.Services.Implementations
             this.categoryRepository = _categoryRepository;
         }
 
-        //  This method checks if a category exists by its name.
+        //  This method checks if a category exists by its name and dr.
         //  It retrieves the category using the repository and returns true if it exists, otherwise false.
         public async Task<bool> CategoryExistsAsync(string categoryName, string categoryDescription)
         {
@@ -96,7 +96,7 @@ namespace ClercSystem.Services.Implementations
         // This method retrieves a category by its ID and maps it to an EditCategoryViewModel.
         public async Task<EditCategoryViewModel> GetCategoryForEditByIdAsync(string id)
         {
-            Category? category = await this.categoryRepository.GetByIdAsync(Guid.Parse(id));
+            Category category = await this.categoryRepository.GetByIdAsync(Guid.Parse(id));
 
             EditCategoryViewModel model = new EditCategoryViewModel
             {

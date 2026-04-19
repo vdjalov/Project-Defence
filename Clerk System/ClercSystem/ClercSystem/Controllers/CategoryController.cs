@@ -92,7 +92,12 @@ namespace ClercSystem.Controllers
             }
 
             EditCategoryViewModel model = await this.categoryService.GetCategoryForEditByIdAsync(id);
-            
+            if(model == null)
+            {
+                TempData["Message"] = "Category not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
             return View(model);
         }
 
@@ -166,6 +171,11 @@ namespace ClercSystem.Controllers
 
             CategoryMoreViewModel model = await this.categoryService.GetCategoryDetailsByIdAsync(id);
            
+            if(model == null)
+            {
+                TempData["Message"] = "Category not found.";
+                return RedirectToAction(nameof(Index));
+            }
             return View(model);
         }
 

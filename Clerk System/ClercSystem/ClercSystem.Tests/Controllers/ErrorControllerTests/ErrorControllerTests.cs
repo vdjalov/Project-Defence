@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.CodeDom;
 
-namespace ClercSystem.Tests.ErrorControllerTests
+namespace ClercSystem.Tests.Controllers.ErrorControllerTests
 {
     public class ErrorControllerTests
     {
