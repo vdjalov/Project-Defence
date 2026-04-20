@@ -16,8 +16,10 @@ namespace ClercSystem.Infrastructure.Implementations
 
         public async Task AddAndSaveAsync(DocumentUser documentUser)
         {
+
+
             await this.context.DocumentsUsers.AddAsync(documentUser);
-            await this.context.SaveChangesAsync();
+            await this.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteAndSaveAsync(DocumentUser documentUser) // This method deletes a DocumentUser entry from the database based on the provided DocumentUser object.

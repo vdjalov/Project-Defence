@@ -84,7 +84,7 @@ namespace ClercSystem.Services.Implementations
                 // either all gets created or nothing 
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    await this.documentRepository.AddAndSaveAsync(document);
+                    await this.documentRepository.AddAndSaveAsync(document); 
                     await this.documentUserRepository.AddAndSaveAsync(documentUser);
                     await this.documentLogsRepository.AddAndSaveAsync(documentLog);
 
@@ -103,6 +103,12 @@ namespace ClercSystem.Services.Implementations
         {
 
             Document document = await this.documentRepository.GetByIdAsync(documentId);
+
+            if(document == null)
+            {
+                return false;
+            }
+
             document.Title = model.Title;
             document.FilePath = model.FilePath;
             document.TimeToAnswer = model.TimeToAnswer;
