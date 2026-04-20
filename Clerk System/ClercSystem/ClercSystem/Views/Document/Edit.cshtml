@@ -87,10 +87,15 @@
 
         <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">Edit Document</button>
-                @if(ViewBag.Source != null) // returns me to the admin area if source is admin area
+                @if(ViewBag.Source == "admin") // returns me to the admin area if source is admin area
                 {
                     <a asp-area="Admin" asp-controller="DocumentManagement" asp-action="Index" class="btn btn-secondary ml-2">Back to List Of Documents</a>
-                } else
+                } 
+                else if (ViewBag.Source == "MyDocuments")
+                {
+                <a asp-area="MyDocuments" asp-controller="MyDocuments" asp-action="Index" class="btn btn-secondary ml-2">Back to List Of Documents</a>
+                }
+                else 
                 {
                     <a asp-action="Index" class="btn btn-secondary ml-2">Back to List Of Documents</a>
                 }
