@@ -23,10 +23,15 @@
 <p><strong>Creator:</strong> @Model.CreatedBy</p>
 <p><strong>Category Name:</strong> @Model.CategoryName</p>
 
-@if(ViewBag.Source != null)
+@if(ViewBag.Source == "admin")
 {
     <a asp-area="Admin" asp-controller="DocumentManagement" asp-action="Index" class="btn btn-primary">Back to All Documents</a>
-}else
+
+}else if(ViewBag.Source == "MyDocuments")
+{
+    <a asp-area="MyDocuments" asp-controller="MyDocuments" asp-action="Index" class="btn btn-primary">Back to All Documents</a>
+}
+else
 {
     <a asp-action="Index" class="btn btn-primary">Back to All Documents</a>
 }

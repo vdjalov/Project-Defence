@@ -414,7 +414,7 @@ namespace ClercSystem.Tests.Controllers.DocumentControllerTests
         public async Task SoftDelete_ShouldRedirect_WhenGuidInvalid()
         {
             this.controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
-            IActionResult result = await this.controller.SoftDelete("invalid", null);
+            IActionResult result = await this.controller.SoftDelete("invalid", null, null);
 
             var redirect = result as RedirectToActionResult;
 
@@ -437,7 +437,7 @@ namespace ClercSystem.Tests.Controllers.DocumentControllerTests
                 .ReturnsAsync(false);
 
             this.controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
-            IActionResult result = await this.controller.SoftDelete(id.ToString(), null);
+            IActionResult result = await this.controller.SoftDelete(id.ToString(), null, null);
 
             var redirect = result as RedirectToActionResult;
 
@@ -465,7 +465,7 @@ namespace ClercSystem.Tests.Controllers.DocumentControllerTests
                 .ReturnsAsync(false);
 
             this.controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
-            IActionResult result = await this.controller.SoftDelete(id.ToString(), null);
+            IActionResult result = await this.controller.SoftDelete(id.ToString(), null, null);
 
             RedirectToActionResult redirect = result as RedirectToActionResult;
 
@@ -494,7 +494,7 @@ namespace ClercSystem.Tests.Controllers.DocumentControllerTests
                 .ReturnsAsync(true);
 
             this.controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
-            IActionResult result = await this.controller.SoftDelete(id.ToString(), null);
+            IActionResult result = await this.controller.SoftDelete(id.ToString(), null, null);
 
             var redirect = result as RedirectToActionResult;
 
@@ -521,7 +521,7 @@ namespace ClercSystem.Tests.Controllers.DocumentControllerTests
                 .ReturnsAsync(true);
 
             this.controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
-            IActionResult result = await this.controller.SoftDelete(id.ToString(), returnUrl);
+            IActionResult result = await this.controller.SoftDelete(id.ToString(), returnUrl, null);
 
             var redirect = result as RedirectResult;
 

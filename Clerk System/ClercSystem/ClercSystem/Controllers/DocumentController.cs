@@ -177,9 +177,14 @@ namespace ClercSystem.Controllers
 
             TempData["Message"] = "Document updated successfully!";
 
-            if(source != null)
+            if(source == "admin")
             {
                 return RedirectToAction("Index", "DocumentManagement", new { area = "Admin" });
+            }
+
+            if (source == "MyDocuments")
+            {
+                return RedirectToAction("Index", "Mydocuments");
             }
 
             return RedirectToAction(nameof(Index));
@@ -221,7 +226,7 @@ namespace ClercSystem.Controllers
 
         [HttpPost] // soft deleting a document so that it does not get lost permanently and can be restored if needed
         [Authorize(Policy = "CanUpdate")]
-        public async Task<IActionResult> SoftDelete(string id, string returnUrl)
+        public async Task<IActionResult> SoftDelete(string id, string returnUrl, string customValue)
         {
 
             bool isGuidValid = base.CheckIfGuidIsValid(id);
@@ -268,6 +273,11 @@ namespace ClercSystem.Controllers
             if(!string.IsNullOrEmpty(returnUrl))
             {
                 return Redirect(returnUrl);
+            }
+
+            if(!string.IsNullOrEmpty(customValue))
+            {
+                return RedirectToAction("Index", "MyDocuments", new { area = "MyDocuments" });
             }
 
             return RedirectToAction(nameof(Index));
