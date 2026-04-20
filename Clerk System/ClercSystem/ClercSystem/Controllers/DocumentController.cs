@@ -76,6 +76,11 @@ namespace ClercSystem.Controllers
                 return View(model);
             }
 
+            if(User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "DocumentManagement", new { area = "Admin" });
+            }
+
             TempData["Message"] = "Document created successfully!";
             return RedirectToAction(nameof(Index));
         }
@@ -171,6 +176,7 @@ namespace ClercSystem.Controllers
             }
 
             TempData["Message"] = "Document updated successfully!";
+
             if(source != null)
             {
                 return RedirectToAction("Index", "DocumentManagement", new { area = "Admin" });
@@ -241,6 +247,10 @@ namespace ClercSystem.Controllers
             if (!checkIfDocumentCreatorIsValidOrDocumentExists)
             {
                 TempData["Message"] = "You do not have sufficient rights to work on this document or it does not exist.If you are an admin user you can restrict it.";
+                if(User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("Index", "DocumentManagement", new { area = "Admin" });
+                }
                 return RedirectToAction(nameof(Index));
             }
 

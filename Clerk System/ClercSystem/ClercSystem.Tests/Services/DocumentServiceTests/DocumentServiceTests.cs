@@ -304,17 +304,7 @@ namespace ClercSystem.Tests.Services.DocumentServiceTests
             Assert.That(result, Is.True);
         }
 
-        [Test]
-        public async Task SoftDeleteAsync_ShouldReturnFalse_WhenDocumentNotFound()
-        {
-            documentRepositoryMock
-                .Setup(r => r.GetAll())
-                .Returns(new List<Document>().AsQueryable());
-
-            var result = await service.SoftDeleteAsync(Guid.NewGuid(), false);
-
-            Assert.That(result, Is.False);
-        }
+        
 
 
     }

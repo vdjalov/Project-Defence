@@ -10,13 +10,15 @@
 }
 
 <h2>My Documents</h2> 
-   
-<div class="d-flex justify-content-end mb-4">
-    <a asp-controller="Document" asp-action="Create" class="btn btn-primary btn-lg">
-        <i class="bi bi-plus-circle"></i> Add New Document
-    </a>
-</div>
 
+@if(User.IsInRole("Admin") || User.IsInRole("User"))
+{
+    <div class="d-flex justify-content-end mb-4">
+        <a asp-controller="Document" asp-action="Create" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle"></i> Add New Document
+        </a>
+    </div>
+}   
 
 <table class="table table-hover table-bordered">
     <thead class="table-dark">
