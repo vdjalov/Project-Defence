@@ -228,5 +228,94 @@ namespace ClercSystem.Tests.Services.DocumentServiceTests
             Assert.That(result, Is.False);
         }
 
+        [Test]
+        public async Task EditDocumentAsync_ShouldReturnFalse_WhenUserHasReadPermission()
+        {
+            var docId = Guid.NewGuid();
+
+            this.documentRepositoryMock
+                .Setup(d => d.GetByIdAsync(docId))
+                .ReturnsAsync(new Document
+                {
+                    Id = docId,
+                    CreatedById = Guid.NewGuid()
+                });
+
+            this.documentUserRepositoryMock
+                .Setup(du => du.GetByIdAsync(It.IsAny<Guid>(), docId))
+                .ReturnsAsync(new DocumentUser
+                {
+                    Permission = PermissionType.Read
+                });
+
+            EditDocumentViewModel model = new EditDocumentViewModel()
+            {
+                DepartmentId = Guid.NewGuid().ToString(),
+                CategoryId = Guid.NewGuid().ToString(),
+            };
+
+            bool result = await service.EditDocumentAsync(docId, false, model);
+
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public async Task EditDocumentAsync_ShouldReturnTrue_WhenAdminUpdatesSuccessfully()
+        {
+            var docId = Guid.NewGuid();
+            var userId = Guid.NewGuid();
+
+            var document = new Document
+            {
+                Id = docId,
+                CreatedById = userId
+            };
+
+            this.documentRepositoryMock
+                .Setup(d => d.GetByIdAsync(docId))
+                .ReturnsAsync(document);
+
+            this.documentUserRepositoryMock
+                .Setup(du => du.GetByIdAsync(userId, docId))
+                .ReturnsAsync(new DocumentUser
+                {
+                    Permission = PermissionType.Read
+                });
+
+            this.documentRepositoryMock
+                .Setup(r => r.UpdateAndSaveAsync(It.IsAny<Document>()))
+                .ReturnsAsync(true);
+
+            this.documentUserRepositoryMock
+                .Setup(du => du.UpdateAndSaveAsync(It.IsAny<DocumentUser>()))
+                .ReturnsAsync(true);
+
+            this.documentLogsRepositoryMock
+                .Setup(dl => dl.AddAndSaveAsync(It.IsAny<DocumentLog>()))
+                .ReturnsAsync(true);
+
+            var result = await service.EditDocumentAsync(docId, true, new EditDocumentViewModel
+                {
+                    DepartmentId = Guid.NewGuid().ToString(),
+                    CategoryId = Guid.NewGuid().ToString(),
+                    PermissionType = "Full"
+                });
+
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public async Task SoftDeleteAsync_ShouldReturnFalse_WhenDocumentNotFound()
+        {
+            documentRepositoryMock
+                .Setup(r => r.GetAll())
+                .Returns(new List<Document>().AsQueryable());
+
+            var result = await service.SoftDeleteAsync(Guid.NewGuid(), false);
+
+            Assert.That(result, Is.False);
+        }
+
+
     }
 }
