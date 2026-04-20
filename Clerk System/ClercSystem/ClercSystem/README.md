@@ -8,7 +8,7 @@ Technology stack
 
 GITHUB HTTPS:  https://github.com/vdjalov/Project-Defence.git
 GITHUB CLI: gh repo clone vdjalov/Project-Defence
-VIDEO LINK:
+VIDEO LINK: https://drive.google.com/file/d/1rdSJC8iH_RgjkH97oUX8gJdv_VBvUogM/view?usp=sharing
 
 PROJECT ARCHITECTURE
 •	DATA LAYER
