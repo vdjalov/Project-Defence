@@ -55,17 +55,14 @@ namespace ClercSystem.Controllers
                 return View(model);
             }
 
-            try
+            bool departmentCreated = await this.departmentService.CreateDepartmentAsync(model);
+            if (departmentCreated == false)
             {
-                await this.departmentService.CreateDepartmentAsync(model);
-                TempData["ErrorMessage"] = "Department created successfully.";
-
-            } 
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"An error occurred while creating the department: {ex.Message}";
+                TempData["ErrorMessage"] = $"An error occurred while creating the department:";
                 return View(model);
             }
+                
+           TempData["ErrorMessage"] = "Department created successfully.";
 
             return RedirectToAction(nameof(Index));
         }
@@ -93,6 +90,12 @@ namespace ClercSystem.Controllers
             }
 
             EditDepartmentViewModel model = await this.departmentService.GetEditModelAsync(departmentId);
+
+            if(model == null)
+            {
+                TempData["ErrorMessage"] = "Department does not exist.";
+                return RedirectToAction(nameof(Index));
+            }
             
             return View(model);
         }
@@ -167,6 +170,12 @@ namespace ClercSystem.Controllers
             }
 
             DepartmentMoreViewModel? department = await this.departmentService.GetDepartmentDetailsAsync(id);
+
+            if(department == null)
+            {
+                TempData["ErrorMessage"] = "Department does not exist.";
+                return RedirectToAction(nameof(Index));
+            }
                
             return View(department);
         }

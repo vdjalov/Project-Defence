@@ -128,7 +128,7 @@ namespace ClercSystem.Tests.Controllers.DepartmentControllerTests
 
             this.departmentServiceMock
                 .Setup(s => s.CreateDepartmentAsync(model))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(true);
 
             this.controller.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
             IActionResult result = await this.controller.Create(model);

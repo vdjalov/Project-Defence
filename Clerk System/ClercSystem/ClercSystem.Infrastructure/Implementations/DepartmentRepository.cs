@@ -36,7 +36,7 @@ namespace ClercSystem.Infrastructure.Implementations
         public async Task AddAndSaveAsync(Department department)
         {
             await this.context.Departments.AddAsync(department);
-            await this.context.SaveChangesAsync();
+            await this.SaveChangesAsync();
         }
 
         public async Task<bool> UpdateAndSaveAsync(Department department)
@@ -69,7 +69,14 @@ namespace ClercSystem.Infrastructure.Implementations
 
         public async Task SaveChangesAsync()
         {
-            await this.context.SaveChangesAsync();
+            try
+            {
+                await this.context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Database save failed.", ex);
+            }
         }
 
         public Task<bool> ExistsAsync(string departmentName, string departmentLocation)

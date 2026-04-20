@@ -20,7 +20,7 @@ namespace ClercSystem.Services.Implementations
         {
             Department? department = await this.departmentRepository.GetByIdAsync(Guid.Parse(id));
 
-            if(department.Documents.Count > 0)
+            if(department != null && department.Documents.Count > 0)
             {
                 return true;
             }
@@ -29,7 +29,7 @@ namespace ClercSystem.Services.Implementations
         }
 
         // create new department
-        public async Task CreateDepartmentAsync(CreateDepartmentViewModel model)
+        public async Task<bool> CreateDepartmentAsync(CreateDepartmentViewModel model)
         {
             Data.Models.Department department = new Data.Models.Department
             {
@@ -38,12 +38,19 @@ namespace ClercSystem.Services.Implementations
             };
            
             await this.departmentRepository.AddAndSaveAsync(department);
+
+            return true;
         }
 
         // delete department by id
         public async Task<bool> DeleteDepartmentAsync(string id)
         {
-            Department department = await this.departmentRepository.GetByIdAsync(Guid.Parse(id));
+            Department? department = await this.departmentRepository.GetByIdAsync(Guid.Parse(id));
+
+            if(department == null)
+            {
+                return false;
+            }
 
             bool isDeleted = await departmentRepository.DeleteAndSaveAsync(department);
 
@@ -71,7 +78,18 @@ namespace ClercSystem.Services.Implementations
         // edit department by id
         public async Task<bool> EditDepartmentAsync(EditDepartmentViewModel model)
         {
+            if (model == null)
+            {
+                return false;
+            }
+
             Department? department = await this.departmentRepository.GetByIdAsync(model.DepartmentId);
+
+            if(department == null)
+            {
+                return false;
+            }
+
             department.Name = model.Name;
             department.Location = model.Location;
 
@@ -104,6 +122,12 @@ namespace ClercSystem.Services.Implementations
         public async Task<DepartmentMoreViewModel?> GetDepartmentDetailsAsync(string id)
         {
             Department? department = await this.departmentRepository.GetByIdAsync(Guid.Parse(id));
+
+            if(department == null)
+            {
+                return null;
+            }
+
             DepartmentMoreViewModel? departmentDetails = new DepartmentMoreViewModel()
             {
                 Name = department.Name,
@@ -118,6 +142,11 @@ namespace ClercSystem.Services.Implementations
         public async Task<EditDepartmentViewModel> GetEditModelAsync(Guid departmentId)
         {
             Department? department = await this.departmentRepository.GetByIdAsync(departmentId);
+
+            if(department == null)
+            {
+                return null;
+            }
 
             EditDepartmentViewModel viewModel = new EditDepartmentViewModel
             {

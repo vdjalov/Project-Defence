@@ -11,7 +11,7 @@ namespace ClercSystem.Services.Interfaces
 
         public Task<List<AllDepartmentsViewModel>> GetAllDepartmentsAsync();
         CreateDepartmentViewModel GetCreateModel();
-        Task CreateDepartmentAsync(CreateDepartmentViewModel model);
+        Task<bool> CreateDepartmentAsync(CreateDepartmentViewModel model);
         Task<bool> DepartmentExistsAsync(string departmentName, string departmentLocation);
         Task <bool> DepartmentExistsByIdAsync(Guid departmentId);
         Task<EditDepartmentViewModel> GetEditModelAsync(Guid departmentId);
